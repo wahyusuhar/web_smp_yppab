@@ -22,3 +22,19 @@ ditandai dengan rujukannya, supaya dokumen utama tetap jadi sumber kebenaran.
 | 13 | Lokasi `PROMPT-AWAL.md` | Ada di root proyek (sejajar `CLAUDE.md`). | — |
 | 14 | Repo git | `git init` dijalankan bila belum ada repo. | — |
 | 15 | Atribusi commit | Mengikuti `CLAUDE.md`: tanpa `Co-Authored-By` dan tanpa atribusi apa pun. | — |
+
+## Fase 1 — 2026-09-28
+
+| # | Topik | Keputusan |
+|---|---|---|
+| 16 | Versi paket (dicek di npm 2026-09-28) | astro 7.3.5, @astrojs/sitemap 3.7.4, tailwindcss & @tailwindcss/vite 4.3.3, gsap 3.15.0, @fontsource-variable/plus-jakarta-sans 5.3.0, @lucide/astro 1.48.0, @astrojs/check 0.9.10. |
+| 17 | TypeScript | Memakai TypeScript 6.x (6.0.3), bukan 7.x terbaru: peer dependency `@astrojs/check` hanya `^5 \|\| ^6`. |
+| 18 | Paket ikon | `@lucide/astro` — paket Astro resmi (repo `lucide-icons/lucide`). `lucide-astro` adalah paket komunitas, tidak dipakai. |
+| 19 | Setup proyek | Disusun manual (bukan `create-astro` yang interaktif). Tailwind v4 lewat `@tailwindcss/vite` di `astro.config.mjs`, sesuai dokumentasi Astro. |
+| 20 | Palet warna | `--color-*: initial` dan `--shadow-*: initial` di `@theme` mematikan palet & bayangan bawaan Tailwind, sehingga hanya token DESIGN.md yang tersedia. |
+| 21 | Utility layout | `container-situs` (1200px, padding 1.25rem/2rem), `section-y` (5rem/8rem), `teks-lebar` (65ch) sebagai `@utility`, bukan nilai arbitrer. |
+| 22 | Helper placeholder | `isIsi()` juga menganggap `null`/`undefined` sebagai placeholder. `tampil()` mengembalikan string (untuk title/atribut); komponen `<Isian>` untuk markup bergaris putus-putus di dev. Tambahan `modeElemen()` → `"tampil" \| "placeholder" \| "sembunyi"` untuk aturan CONTENT §6. |
+| 23 | Data tambahan di `sekolah.ts` | `ringkasan` dan `keunggulan` (maks 4) ditambahkan karena dipakai beranda (PRD §5) dan semua data harus di satu file. `pendaftaran` diperluas: `tahunAjaran`, `gelombang` (periode = `[ISI]`), `syarat`/`alur`/`faq` sebagai dummy. Ekskul & fasilitas memakai nama slot foto (`ekskul-1`, `fasilitas-1`) yang diisi di Fase 2. |
+| 24 | Kriteria `cek-konten --ketat` | Gagal hanya jika ada `[ISI]` atau `PUBLIC_SITE_URL` kosong (CONTENT §5). Dummy & statistik `null` dilaporkan tetapi tidak menggagalkan, karena dummy boleh dipertahankan bila disetujui sekolah. `npm run cek-konten --ketat` (tanpa `--`) juga didukung lewat `npm_config_ketat`. |
+| 25 | Preload font | CSS memakai `wght.css` fontsource (subset lewat `unicode-range`, halaman berbahasa Indonesia hanya mengunduh subset latin). `<link rel="preload">` untuk file latin dipasang di BaseLayout pada Fase 3. |
+| 26 | Line ending | `.gitattributes` memaksa LF agar diff konsisten di Windows. |
