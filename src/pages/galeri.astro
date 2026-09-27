@@ -1,0 +1,70 @@
+---
+/**
+ * Galeri (PRD §5): masonry (CSS columns) + A3 stagger + A12 lightbox.
+ * Item placeholder tidak dirender di produksi (modeFoto) sehingga kolom tetap rapat; di dev placeholder tampil.
+ * Selama masih ada foto stok, satu kalimat di bawah judul memberi tahu foto akan diganti (PRD §5, KEPUTUSAN #38).
+ */
+import { getImage } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Foto from "../components/Foto.astro";
+import Lightbox from "../components/Lightbox.astro";
+import Button from "../components/Button.astro";
+import { fotoGaleri } from "../data/galeri";
+import { cariFoto, modeFoto, adaFotoStok } from "../lib/foto";
+
+const item = await Promise.all(
+  fotoGaleri
+    .filter((f) => modeFoto(f.src) !== "sembunyi")
+    .map(async (f) => {
+      const hasil = cariFoto(f.src);
+      const besar =
+        hasil.jenis === "gambar" ? (await getImage({ src: hasil.gambar, width: 1600, format: "webp" })).src : null;
+      return { ...f, besar };
+    }),
+);
+
+const pengantar = [
+  "Suasana belajar, upacara, Pramuka, dan kegiatan ekstrakurikuler.",
+  adaFotoStok("galeri") && "Foto kegiatan SMPS YPPAB akan segera kami perbarui dengan dokumentasi asli sekolah.",
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<BaseLayout
+  judul="Galeri Foto – SMPS YPPAB"
+  deskripsi="Galeri foto kegiatan belajar, upacara, Pramuka, dan ekstrakurikuler di SMPS YPPAB. Sebagian masih foto ilustrasi dan akan diganti dokumentasi asli sekolah."
+  breadcrumb={[{ label: "Galeri", href: "/galeri/" }]}
+  h1="Galeri SMPS YPPAB"
+  pengantar={pengantar}
+>
+  <section class="section-y" aria-label="Foto kegiatan">
+    <div class="container-situs flex flex-col gap-10">
+      <ul class="columns-2 gap-4 md:columns-3" data-stagger>
+        {
+          item.map((f) => (
+            <li class="mb-4 break-inside-avoid">
+              {f.besar ? (
+                <a href={f.besar} data-lightbox="galeri" class="block rounded-gambar">
+                  <Foto src={f.src} alt={f.alt} sizes="(min-width: 768px) 33vw, 50vw" class="rounded-gambar" />
+                </a>
+              ) : (
+                <Foto src={f.src} alt={f.alt} sizes="(min-width: 768px) 33vw, 50vw" class="rounded-gambar" />
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <Lightbox />
+      <div class="flex flex-wrap gap-3">
+        <Button href="/ekstrakurikuler/" varian="secondary">Lihat ekstrakurikuler</Button>
+        <Button href="/pendaftaran/" varian="ghost">Info pendaftaran</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { pasangAnimasiGulir } from "../scripts/animasi";
+  pasangAnimasiGulir();
+</script>
