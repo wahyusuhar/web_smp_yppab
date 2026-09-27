@@ -1,0 +1,164 @@
+---
+/**
+ * Profil sekolah (PRD §5): sambutan kepala sekolah, visi-misi, sejarah (A6 timeline), identitas sekolah.
+ * Baris identitas yang masih placeholder disembunyikan di produksi (saringBaris); foto gedung placeholder tidak dirender.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Timeline from "../components/Timeline.astro";
+import Avatar from "../components/Avatar.astro";
+import Badge from "../components/Badge.astro";
+import Button from "../components/Button.astro";
+import Foto from "../components/Foto.astro";
+import Isian from "../components/Isian.astro";
+import { sekolah } from "../data/sekolah";
+import { saringBaris, isIsi } from "../lib/isian";
+import { alamatLengkap } from "../lib/alamat";
+import { modeFoto } from "../lib/foto";
+
+const { kepalaSekolah, visi, misi, sambutan, sejarah } = sekolah;
+
+const identitas = saringBaris([
+  { label: "Nama sekolah", nilai: sekolah.nama },
+  { label: "Nama lengkap", nilai: sekolah.namaLengkap },
+  { label: "Jenjang", nilai: sekolah.jenjang },
+  { label: "Status", nilai: sekolah.status },
+  { label: "NPSN", nilai: sekolah.npsn },
+  { label: "Akreditasi", nilai: sekolah.akreditasi },
+  { label: "Yayasan", nilai: sekolah.yayasan },
+  { label: "Tahun berdiri", nilai: sekolah.tahunBerdiri },
+  { label: "Alamat", nilai: alamatLengkap() },
+  { label: "Provinsi", nilai: sekolah.alamat.provinsi },
+]);
+const adaFotoGedung = modeFoto("stok/gedung-1") !== "sembunyi";
+const namaKepala = isIsi(kepalaSekolah.nama) ? null : kepalaSekolah.nama;
+---
+
+<BaseLayout
+  judul="Profil Sekolah – SMPS YPPAB"
+  deskripsi="Profil SMPS YPPAB: sambutan kepala sekolah, visi dan misi, sejarah singkat, serta identitas sekolah menengah pertama swasta di Provinsi Jambi."
+  breadcrumb={[{ label: "Profil", href: "/profil/" }]}
+  h1="Profil SMPS YPPAB"
+  pengantar={sekolah.ringkasan.teks}
+>
+  <!-- Sambutan kepala sekolah -->
+  <section class="section-y" aria-labelledby="judul-sambutan">
+    <div class="container-situs grid gap-12 lg:grid-cols-3 lg:gap-16">
+      <div class="flex flex-col gap-4">
+        <SectionHeading id="judul-sambutan" eyebrow="Sambutan" judul="Dari kepala sekolah" />
+        <div class="flex items-center gap-4">
+          <Avatar nama={kepalaSekolah.nama} foto={kepalaSekolah.foto} ukuran="besar" />
+          <div>
+            {
+              (namaKepala || import.meta.env.DEV) && (
+                <p class="font-semibold text-biru-800">
+                  <Isian nilai={kepalaSekolah.nama} />
+                </p>
+              )
+            }
+            <p class="text-sm">Kepala {sekolah.nama}</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-4 lg:col-span-2">
+        {sambutan.dummy && <Badge varian="contoh" class="self-start" />}
+        <blockquote class="teks-lebar text-lg leading-relaxed text-biru-800">
+          <p>{sambutan.teks}</p>
+          {namaKepala && <footer class="mt-4 text-base font-semibold">— {namaKepala}</footer>}
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- Visi & misi -->
+  <section class="section-y bg-biru-50" aria-labelledby="judul-visi">
+    <div class="container-situs grid gap-12 lg:grid-cols-2 lg:gap-16">
+      <div class="flex flex-col gap-6">
+        <SectionHeading id="judul-visi" eyebrow="Arah sekolah" judul="Visi dan misi" />
+        {(visi.dummy || misi.dummy) && <Badge varian="contoh" class="self-start" />}
+        <div>
+          <h3 class="text-h3">Visi</h3>
+          <p class="teks-lebar mt-2 text-lg text-biru-800">{visi.teks}</p>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-h3">Misi</h3>
+        <ol class="mt-4 flex flex-col gap-4">
+          {
+            misi.daftar.map((m, i) => (
+              <li class="flex gap-4">
+                <span class="angka-garis w-10 shrink-0 text-h3 leading-none font-extrabold" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span class="teks-lebar">{m}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sejarah (A6) -->
+  <section class="section-y" aria-labelledby="judul-sejarah">
+    <div class="container-situs grid gap-12 lg:grid-cols-3 lg:gap-16">
+      <div class="flex flex-col gap-6">
+        <SectionHeading id="judul-sejarah" eyebrow="Perjalanan" judul="Sejarah singkat" />
+        <div class:list={["relative", adaFotoGedung ? "flex flex-col gap-4" : ""]}>
+          <Foto
+            src="stok/gedung-1"
+            alt="Foto gedung sekolah"
+            rasio="4/3"
+            sizes="(min-width: 1024px) 30vw, 100vw"
+            class="rounded-gambar"
+          />
+          <Foto
+            src="stok/kegiatan-kelas-2"
+            alt="Ilustrasi: siswa SMP mengikuti kegiatan literasi di kelas bersama guru"
+            rasio="4/3"
+            sizes="(min-width: 1024px) 30vw, 100vw"
+            class="rounded-gambar"
+          />
+        </div>
+      </div>
+      <div class="lg:col-span-2">
+        <Timeline item={sejarah} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Identitas sekolah: baris placeholder disembunyikan di produksi -->
+  <section class="section-y bg-biru-50" aria-labelledby="judul-identitas">
+    <div class="container-situs flex flex-col gap-10">
+      <SectionHeading id="judul-identitas" eyebrow="Data sekolah" judul="Identitas sekolah" />
+      <div class="overflow-hidden rounded-kartu border border-abu-300 bg-putih">
+        <table class="w-full text-left">
+          <caption class="sr-only">Identitas {sekolah.nama}</caption>
+          <tbody>
+            {
+              identitas.map((b) => (
+                <tr class="border-b border-abu-300 last:border-b-0">
+                  <th scope="row" class="w-2/5 px-6 py-4 align-top font-semibold text-biru-800 md:w-1/3">
+                    {b.label}
+                  </th>
+                  <td class="px-6 py-4">
+                    <Isian nilai={b.nilai} />
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <Button href="/pendaftaran/">Info pendaftaran</Button>
+        <Button href="/kontak/" varian="secondary">Hubungi sekolah</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { pasangAnimasiGulir } from "../scripts/animasi";
+  pasangAnimasiGulir();
+</script>
