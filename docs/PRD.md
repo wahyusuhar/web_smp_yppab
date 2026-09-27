@@ -42,7 +42,7 @@ dan menjadi hasil pertama Google untuk pencarian **"SMPS YPPAB"** serta variasin
 | `/guru-dan-staf` | Guru & Staf | Grid kartu (foto/avatar inisial, nama, jabatan/mapel) | Stagger reveal grid (A3) |
 | `/ekstrakurikuler` | Ekstrakurikuler | Daftar ekskul + jadwal + deskripsi singkat | Hover/focus reveal kartu (A14) |
 | `/fasilitas` | Fasilitas | Daftar fasilitas dengan foto | Parallax gambar ringan (A8) |
-| `/galeri` | Galeri | Grid foto dengan lightbox (tanpa library berat) | Stagger reveal masonry (A3) + lightbox zoom (A12) |
+| `/galeri` | Galeri | Grid foto dengan lightbox (tanpa library berat). Selama masih ada foto galeri `stok: true`, satu kalimat di bawah judul: "Foto kegiatan SMPS YPPAB akan segera kami perbarui dengan dokumentasi asli sekolah." (helper `adaFotoStok("galeri")`) | Stagger reveal masonry (A3) + lightbox zoom (A12) |
 | `/berita` | Berita | Daftar artikel, pagination 6 per halaman | Stagger kartu (A3) |
 | `/berita/[slug]` | Detail berita | Judul, tanggal, gambar, isi, berita terkait | Progress bar baca (A15) |
 | `/pendaftaran` | Penerimaan Murid Baru (SPMB) | Jadwal, syarat, alur (step), biaya (placeholder bila belum ada), FAQ, tombol WhatsApp | Alur step tergambar berurutan (A7) |

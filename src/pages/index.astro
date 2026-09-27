@@ -2,6 +2,7 @@
 // Kerangka sementara Fase 1 untuk menguji token & data. Diganti penuh di Fase 4.
 import "../styles/global.css";
 import Isian from "../components/Isian.astro";
+import Foto from "../components/Foto.astro";
 import { sekolah } from "../data/sekolah";
 import { saringBaris } from "../lib/isian";
 
@@ -37,6 +38,10 @@ const identitas = saringBaris([
           ))
         }
       </dl>
+      <div class="mt-8 grid gap-4 md:grid-cols-2">
+        <Foto src="stok/hero-1" alt="Ilustrasi: dua siswa SMP berseragam putih-biru membaca bersama di halaman sekolah" rasio="16/9" posisi="50% 15%" class="rounded-gambar" />
+        <Foto src="stok/gedung-1" alt="Placeholder foto gedung sekolah" rasio="16/9" class="rounded-gambar" />
+      </div>
     </main>
   </body>
 </html>

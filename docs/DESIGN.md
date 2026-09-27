@@ -40,7 +40,8 @@ Aturan:
 
 ## 4. Komponen inti (buat sekali, pakai ulang)
 `Button` (primary, secondary-outline, ghost), `SectionHeading` (eyebrow + h2 + deskripsi), `Card`, `StatCounter`, `Badge`,
-`Breadcrumb`, `Timeline`, `StepList`, `Lightbox`, `WhatsAppFab`, `Header`, `MobileDrawer`, `Footer`.
+`Breadcrumb`, `Timeline`, `StepList`, `Lightbox`, `WhatsAppFab`, `Header`, `MobileDrawer`, `Footer`,
+`Foto` (semua gambar konten; memasang label "Foto ilustrasi" otomatis, lihat §5).
 Tidak boleh ada tombol/kartu yang di-styling di luar komponen ini.
 
 ## 5. Elemen visual khas (pembeda dari template)
@@ -48,6 +49,11 @@ Tidak boleh ada tombol/kartu yang di-styling di luar komponen ini.
 - **Gelombang SVG** pemisah section hero → konten, beranimasi pelan: pola gelombang berulang (tileable) digeser `translateX`, 8–12 dtk loop. Bukan path morph; plugin MorphSVG tidak dipakai.
 - Foto dengan bingkai radius + offset blok biru-100 di belakangnya.
 - Angka besar (statistik, nomor langkah) memakai weight 800 dengan outline/transparansi biru.
+- **Label "Foto ilustrasi"**: setiap foto stok yang tampil (hero, galeri, kegiatan, ekskul, fasilitas, berita) diberi label
+  kecil di pojok kiri bawah — pill, `text-xs` weight 600, teks `putih` di atas `biru-950` 75% opacity, jarak 12px dari tepi.
+  Tampil di dev DAN produksi. Sumber datanya `stok: true` di `src/data/kredit.ts`; dipasang otomatis oleh komponen `Foto`,
+  tidak pernah ditulis manual. Label `aria-hidden` karena alt foto stok sudah diawali "Ilustrasi:".
+  Label hilang otomatis saat foto diganti foto asli sekolah (`stok: false` atau entri kredit dihapus).
 
 ## 6. Katalog animasi (HANYA ini yang dipakai)
 Library: GSAP + ScrollTrigger. Transisi halaman: Astro View Transitions.
