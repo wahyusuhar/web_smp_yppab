@@ -2,10 +2,12 @@
 /**
  * Timeline sejarah (profil). Garis vertikal `data-garis` & titik `data-titik` disiapkan untuk A6
  * (scaleY terikat scroll) — tanpa JS semuanya tampil penuh.
+ * Tahun yang masih placeholder tidak ditampilkan di produksi (baris kosong "–" tidak berguna).
  */
 import Isian from "./Isian.astro";
 import Badge from "./Badge.astro";
 import type { PeristiwaSejarah } from "../data/sekolah";
+import { isIsi } from "../lib/isian";
 
 interface Props {
   item: PeristiwaSejarah[];
@@ -28,9 +30,11 @@ const { item } = Astro.props;
             aria-hidden="true"
             data-titik
           />
-          <p class="text-eyebrow text-biru-600 uppercase">
-            <Isian nilai={p.tahun} />
-          </p>
+          {(!isIsi(p.tahun) || import.meta.env.DEV) && (
+            <p class="text-eyebrow text-biru-600 uppercase">
+              <Isian nilai={p.tahun} />
+            </p>
+          )}
           <h3 class="mt-1 text-h3">{p.judul}</h3>
           <p class="teks-lebar mt-2">{p.isi}</p>
           {p.dummy && <Badge varian="contoh" class="mt-3" />}

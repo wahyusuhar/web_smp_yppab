@@ -1,0 +1,44 @@
+---
+/**
+ * Avatar guru/kepala sekolah (ASSETS.md §5: TIDAK memakai foto stok orang).
+ * Foto asli bila ada; selain itu inisial nama; bila nama masih placeholder, ikon orang.
+ */
+import { User } from "@lucide/astro";
+import Foto from "./Foto.astro";
+import { isIsi } from "../lib/isian";
+
+interface Props {
+  nama: string;
+  /** Path foto asli relatif terhadap src/assets/images/, atau null */
+  foto: string | null;
+  ukuran?: "sedang" | "besar";
+}
+
+const { nama, foto, ukuran = "sedang" } = Astro.props;
+const inisial = isIsi(nama)
+  ? ""
+  : nama
+      .replace(/[^\p{L}\s]/gu, "")
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((k) => k[0]?.toUpperCase())
+      .join("");
+const kelasUkuran = ukuran === "besar" ? "size-24 text-h3" : "size-16 text-lg";
+---
+
+{
+  foto ? (
+    <Foto src={foto} alt={`Foto ${nama}`} rasio="1/1" sizes="96px" class:list={["rounded-full", kelasUkuran]} />
+  ) : (
+    <span
+      class:list={[
+        "inline-flex shrink-0 items-center justify-center rounded-full bg-biru-100 font-extrabold text-biru-800",
+        kelasUkuran,
+      ]}
+      aria-hidden="true"
+    >
+      {inisial || <User size={ukuran === "besar" ? 40 : 28} stroke-width={1.75} />}
+    </span>
+  )
+}

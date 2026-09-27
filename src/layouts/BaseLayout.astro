@@ -11,6 +11,7 @@ import Footer from "../components/Footer.astro";
 import WhatsAppFab from "../components/WhatsAppFab.astro";
 import KembaliKeAtas from "../components/KembaliKeAtas.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
+import PageHero from "../components/PageHero.astro";
 import { buatSchema, buatSchemaBreadcrumb, type ItemBreadcrumb } from "../lib/schema";
 import { periksaMeta } from "../lib/seo";
 
@@ -26,6 +27,10 @@ interface Props {
   altGambarOg?: string;
   /** JSON-LD tambahan (NewsArticle, FAQPage) */
   schema?: Record<string, unknown>[];
+  /** h1 halaman dalam → dirender sebagai PageHero (breadcrumb + h1 + garis "dasi") */
+  h1?: string;
+  /** Paragraf pengantar di bawah h1 halaman dalam */
+  pengantar?: string;
 }
 
 const {
@@ -36,6 +41,8 @@ const {
   gambarOg = "/og/og-default.png",
   altGambarOg = "Tulisan SMPS YPPAB di atas latar biru",
   schema = [],
+  h1,
+  pengantar,
 } = Astro.props;
 
 // `site` selalu terisi: PUBLIC_SITE_URL atau fallback https://example.com (astro.config.mjs)
@@ -105,10 +112,16 @@ if (!noindex) periksaMeta(Astro.url.pathname, judul, deskripsi);
 
     <main id="konten" tabindex="-1" class="focus:outline-none">
       {
-        jejak && (
-          <div class="container-situs pt-6">
-            <Breadcrumb item={jejak} />
-          </div>
+        h1 ? (
+          <PageHero judul={h1} pengantar={pengantar} breadcrumb={jejak}>
+            <slot name="hero-tambahan" />
+          </PageHero>
+        ) : (
+          jejak && (
+            <div class="container-situs pt-6">
+              <Breadcrumb item={jejak} />
+            </div>
+          )
         )
       }
       <slot />
