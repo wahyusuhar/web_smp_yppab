@@ -11,18 +11,15 @@ const lainnya = kreditFoto.filter((k) => !wajibAtribusi(k.lisensi));
   judul="Kredit Foto – SMPS YPPAB"
   deskripsi="Daftar sumber, fotografer, dan lisensi foto ilustrasi yang dipakai di website SMPS YPPAB."
   breadcrumb={[{ label: "Kredit Foto", href: "/kredit-foto/" }]}
+  h1="Kredit Foto"
+  pengantar="Sebagian foto di website SMPS YPPAB adalah foto ilustrasi dari penyedia foto bebas pakai, bukan foto kegiatan sekolah. Foto-foto ini ditandai label 'Foto ilustrasi' dan akan diganti dengan dokumentasi asli sekolah."
   noindex
 >
-    <div class="container-situs pt-8 pb-20 lg:pb-32">
-      <h1 class="text-h2">Kredit Foto</h1>
-      <p class="teks-lebar mt-4">
-        Sebagian foto di website SMPS YPPAB adalah foto ilustrasi dari penyedia foto bebas pakai, bukan foto kegiatan
-        sekolah. Foto-foto ini ditandai label "Foto ilustrasi" dan akan diganti dengan dokumentasi asli sekolah.
-      </p>
+    <div class="container-situs section-y">
 
       {
         denganAtribusi.length > 0 && (
-          <section class="mt-12" aria-labelledby="judul-cc">
+          <section aria-labelledby="judul-cc">
             <h2 id="judul-cc" class="text-h3">Foto berlisensi Creative Commons</h2>
             <ul class="mt-6 grid gap-4">
               {denganAtribusi.map((k) => (
