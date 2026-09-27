@@ -1,0 +1,280 @@
+---
+/**
+ * Hero beranda (DESIGN.md §6):
+ * - A18 slideshow latar 3 foto (crossfade 1,2 dtk + Ken Burns), kontrol titik + jeda/putar (WCAG 2.2.2)
+ * - A1 reveal teks per kata (CSS, kata dipecah saat build — tidak menunggu JS)
+ * - A13 gelombang pemisah (translateX loop)
+ * Foto 1 = elemen LCP: eager + fetchpriority high, tanpa animasi opacity. Foto 2–3 dimuat setelah `load`.
+ */
+import { getImage } from "astro:assets";
+import { Pause, Play } from "@lucide/astro";
+import Button from "./Button.astro";
+import Badge from "./Badge.astro";
+import { slideHero } from "../data/hero";
+import { sekolah } from "../data/sekolah";
+import { cariFoto } from "../lib/foto";
+
+const LEBAR = [640, 960, 1280, 1600, 1920, 2400];
+
+const slide = await Promise.all(
+  slideHero.map(async (s) => {
+    const f = cariFoto(s.src);
+    if (f.jenis !== "gambar") throw new Error(`[hero] ${s.src} harus berupa foto, bukan placeholder`);
+    const widths = LEBAR.filter((w) => w <= f.gambar.width);
+    const [avif, webp, jpg] = await Promise.all(
+      (["avif", "webp", "jpg"] as const).map((format) => getImage({ src: f.gambar, widths, format })),
+    );
+    return {
+      ...s,
+      stok: f.stok,
+      avif: avif.srcSet.attribute,
+      webp: webp.srcSet.attribute,
+      jpgSrcset: jpg.srcSet.attribute,
+      jpg: jpg.src,
+      width: f.gambar.width,
+      height: f.gambar.height,
+    };
+  }),
+);
+
+// Kata-kata untuk A1: dipecah saat build, setiap kata mendapat indeks untuk animation-delay
+const judul = sekolah.nama.split(" ");
+const subjudul = `${sekolah.jenjang} ${sekolah.status.toLowerCase()} untuk kelas 7–9 di Provinsi ${sekolah.alamat.provinsi}`.split(" ");
+const jumlahKata = judul.length + subjudul.length;
+---
+
+<section class="hero-slideshow latar-gelap relative isolate overflow-hidden" aria-labelledby="judul-hero" data-hero>
+  <div class="absolute inset-0 -z-10">
+    {
+      slide.map((s, i) => (
+        <div
+          class:list={["hero-slide absolute inset-0", i === 0 && "aktif"]}
+          style={`--pos-lebar: ${s.posisi.lebar}; --pos-sempit: ${s.posisi.sempit}`}
+          aria-hidden={i === 0 ? undefined : "true"}
+          data-slide
+        >
+          <picture>
+            {i === 0 ? (
+              <>
+                <source type="image/avif" srcset={s.avif} sizes="100vw" />
+                <source type="image/webp" srcset={s.webp} sizes="100vw" />
+                <img
+                  src={s.jpg}
+                  srcset={s.jpgSrcset}
+                  sizes="100vw"
+                  alt={s.alt}
+                  width={s.width}
+                  height={s.height}
+                  loading="eager"
+                  fetchpriority="high"
+                />
+              </>
+            ) : (
+              <>
+                <source type="image/avif" data-srcset={s.avif} sizes="100vw" />
+                <source type="image/webp" data-srcset={s.webp} sizes="100vw" />
+                <img
+                  data-src={s.jpg}
+                  data-srcset={s.jpgSrcset}
+                  sizes="100vw"
+                  alt={s.alt}
+                  width={s.width}
+                  height={s.height}
+                  decoding="async"
+                />
+              </>
+            )}
+          </picture>
+          {s.stok && (
+            <span
+              class="pointer-events-none absolute bottom-16 left-4 z-10 rounded-full bg-biru-950/75 px-3 py-1 text-xs font-semibold text-putih md:left-8"
+              aria-hidden="true"
+            >
+              Foto ilustrasi
+            </span>
+          )}
+        </div>
+      ))
+    }
+    <div class="hero-overlay absolute inset-0" aria-hidden="true"></div>
+  </div>
+
+  <div class="container-situs flex h-full items-center pb-16">
+    <div class="max-w-2xl text-putih">
+      {
+        sekolah.pendaftaran.dibuka && (
+          <span class="hero-kata mb-6" style="--i: 0">
+            <Badge varian="kuning">Pendaftaran Dibuka</Badge>
+          </span>
+        )
+      }
+      <h1 id="judul-hero" class="text-display text-putih">
+        {
+          judul.map((k, i) => (
+            <>
+              <span class="hero-kata" style={`--i: ${i}`}>
+                {k}
+              </span>{" "}
+            </>
+          ))
+        }
+        <span class="mt-3 block text-h3 font-semibold text-biru-100">
+          {
+            subjudul.map((k, i) => (
+              <>
+                <span class="hero-kata" style={`--i: ${judul.length + i}`}>
+                  {k}
+                </span>{" "}
+              </>
+            ))
+          }
+        </span>
+      </h1>
+      <p class="hero-kata teks-lebar mt-6 text-biru-50" style={`--i: ${jumlahKata}`}>{sekolah.hero.teks}</p>
+      <div class="hero-kata mt-8 flex flex-wrap gap-3" style={`--i: ${jumlahKata + 1}`}>
+        <Button href="/pendaftaran/" diLatarGelap>Daftar sekarang</Button>
+        <Button href="/profil/" varian="secondary" diLatarGelap>Kenali sekolah kami</Button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kontrol A18: tampil hanya bila JS aktif, bukan reduced motion, dan ada >1 foto -->
+  <div class="absolute right-4 bottom-16 z-10 flex items-center gap-2 md:right-8" data-kontrol hidden>
+    <button
+      type="button"
+      class="inline-flex size-10 items-center justify-center rounded-full bg-biru-950/75 text-putih hover:bg-biru-950"
+      aria-label="Jeda slideshow foto latar"
+      data-jeda-putar
+    >
+      <Pause size={20} stroke-width={1.75} data-ikon-jeda />
+      <Play size={20} stroke-width={1.75} data-ikon-putar class="hidden" />
+    </button>
+    <div class="flex items-center rounded-full bg-biru-950/75 px-1" role="group" aria-label="Pilih foto latar">
+      {
+        slide.map((_, i) => (
+          <button
+            type="button"
+            class="group inline-flex size-8 items-center justify-center rounded-full"
+            aria-label={`Tampilkan foto latar ${i + 1} dari ${slide.length}`}
+            aria-current={i === 0 ? "true" : undefined}
+            data-titik={i}
+          >
+            <span class="size-2.5 rounded-full bg-putih/50 group-hover:bg-putih group-aria-[current=true]:bg-putih" />
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- A13 gelombang pemisah: pola tileable, digeser translateX -->
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-12 overflow-hidden" aria-hidden="true">
+    <svg class="gelombang h-full" viewBox="0 0 2880 48" preserveAspectRatio="none">
+      <path
+        d="M0 24 Q180 0 360 24 T720 24 T1080 24 T1440 24 T1800 24 T2160 24 T2520 24 T2880 24 V48 H0 Z"
+        fill="var(--color-putih)"></path>
+    </svg>
+  </div>
+</section>
+
+<script>
+  const hero = document.querySelector<HTMLElement>("[data-hero]");
+  const slide = hero ? [...hero.querySelectorAll<HTMLElement>("[data-slide]")] : [];
+  const kontrol = hero?.querySelector<HTMLElement>("[data-kontrol]");
+  const tombolJeda = hero?.querySelector<HTMLButtonElement>("[data-jeda-putar]");
+  const titik = hero ? [...hero.querySelectorAll<HTMLButtonElement>("[data-titik]")] : [];
+  const geraknyaDikurangi = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (hero && kontrol && tombolJeda && slide.length > 1 && !geraknyaDikurangi) {
+    const JEDA_MS = 6000;
+    const FADE_MS = 1200;
+    let aktif = 0;
+    let timer: number | undefined;
+    let siap = false;
+    let dijedaPengguna = false;
+    let terlihat = true;
+
+    kontrol.hidden = false;
+    // Ken Burns untuk foto 1 dimulai setelah paint pertama (foto tetap tampil langsung, tanpa fade)
+    requestAnimationFrame(() => requestAnimationFrame(() => slide[0]?.classList.add("zoom")));
+
+    const muatSisa = () => {
+      for (const s of slide.slice(1)) {
+        for (const el of s.querySelectorAll<HTMLElement>("[data-srcset]")) {
+          el.setAttribute("srcset", el.dataset.srcset ?? "");
+          el.removeAttribute("data-srcset");
+        }
+        const img = s.querySelector<HTMLImageElement>("img[data-src]");
+        if (img) {
+          img.src = img.dataset.src ?? "";
+          img.removeAttribute("data-src");
+        }
+      }
+      siap = true;
+      jalankan();
+    };
+
+    const perbaruiTitik = () =>
+      titik.forEach((t, i) => (i === aktif ? t.setAttribute("aria-current", "true") : t.removeAttribute("aria-current")));
+
+    const tampilkan = async (i: number) => {
+      if (i === aktif) return;
+      const baru = slide[i];
+      const lama = slide[aktif];
+      if (!baru || !lama) return;
+      await baru.querySelector("img")?.decode().catch(() => undefined);
+      baru.classList.remove("zoom");
+      baru.classList.add("aktif");
+      baru.removeAttribute("aria-hidden");
+      requestAnimationFrame(() => requestAnimationFrame(() => baru.classList.add("zoom")));
+      lama.classList.remove("aktif");
+      lama.setAttribute("aria-hidden", "true");
+      window.setTimeout(() => lama.classList.remove("zoom"), FADE_MS);
+      aktif = i;
+      perbaruiTitik();
+    };
+
+    function berhenti() {
+      window.clearInterval(timer);
+      timer = undefined;
+    }
+
+    function jalankan() {
+      berhenti();
+      if (siap && !dijedaPengguna && terlihat && !document.hidden) {
+        timer = window.setInterval(() => void tampilkan((aktif + 1) % slide.length), JEDA_MS);
+      }
+    }
+
+    tombolJeda.addEventListener("click", () => {
+      dijedaPengguna = !dijedaPengguna;
+      hero.toggleAttribute("data-jeda", dijedaPengguna);
+      tombolJeda.setAttribute("aria-label", dijedaPengguna ? "Putar slideshow foto latar" : "Jeda slideshow foto latar");
+      tombolJeda.querySelector("[data-ikon-jeda]")?.classList.toggle("hidden", dijedaPengguna);
+      tombolJeda.querySelector("[data-ikon-putar]")?.classList.toggle("hidden", !dijedaPengguna);
+      jalankan();
+    });
+
+    titik.forEach((t, i) =>
+      t.addEventListener("click", () => {
+        void tampilkan(i);
+        jalankan(); // hitung ulang 6 detik dari pilihan pengguna
+      }),
+    );
+
+    document.addEventListener("visibilitychange", jalankan);
+    new IntersectionObserver(([entri]) => {
+      terlihat = entri?.isIntersecting ?? true;
+      jalankan();
+    }).observe(hero);
+
+    // Foto 2–3 dimuat SETELAH load, saat browser menganggur — tidak berebut bandwidth dengan foto LCP
+    const setelahLoad = () => {
+      // Safari lama belum punya requestIdleCallback
+      const saatMenganggur = window.requestIdleCallback as typeof window.requestIdleCallback | undefined;
+      if (saatMenganggur) saatMenganggur(muatSisa, { timeout: 2000 });
+      else setTimeout(muatSisa, 200);
+    };
+    if (document.readyState === "complete") setelahLoad();
+    else window.addEventListener("load", setelahLoad, { once: true });
+  }
+</script>

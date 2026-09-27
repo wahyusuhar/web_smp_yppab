@@ -55,7 +55,9 @@ if (!noindex) periksaMeta(Astro.url.pathname, judul, deskripsi);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline>
+      // `js`: JavaScript aktif. `js-anim`: boleh animasi (bukan reduced motion) — state awal animasi hanya di bawah class ini.
       document.documentElement.classList.add("js");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-anim");
     </script>
     <title>{judul}</title>
     <meta name="description" content={deskripsi} />

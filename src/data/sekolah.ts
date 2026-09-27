@@ -139,6 +139,8 @@ export interface DataSekolah {
   jamLayanan: Isian;
   sosialMedia: SosialMedia;
   statistik: Statistik;
+  /** Paragraf pendek di hero beranda */
+  hero: TeksDummy;
   ringkasan: TeksDummy;
   keunggulan: Keunggulan[];
   visi: TeksDummy;
@@ -178,6 +180,11 @@ export const sekolah: DataSekolah = {
   jamLayanan: "[ISI: contoh Senin–Jumat 07.00–14.00 WIB]",
   sosialMedia: { instagram: null, facebook: null, youtube: null, tiktok: null },
   statistik: { siswa: null, guru: null, rombel: null, ekstrakurikuler: null },
+
+  hero: {
+    teks: "Belajar dengan tertib dan hangat selama kelas 7 sampai 9, dari projek P5 sampai Pramuka dan ekstrakurikuler pilihan.",
+    dummy: true,
+  },
 
   ringkasan: {
     teks:

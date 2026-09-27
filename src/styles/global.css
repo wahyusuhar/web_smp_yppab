@@ -205,6 +205,138 @@
     }
   }
 
+  /* ---------- Hero beranda (A18 slideshow, A1 reveal teks, A13 gelombang) ---------- */
+  .hero-slideshow {
+    /* Layar penuh di bawah header sticky (h-20): 100svh di mobile, maks 760px di desktop */
+    height: calc(100vh - 5rem);
+    height: calc(100svh - 5rem);
+    min-height: 34rem;
+    @media (width >= 64rem) {
+      max-height: 760px;
+    }
+  }
+  .hero-slide {
+    opacity: 0;
+    transition: opacity 1200ms ease-in-out;
+    &.aktif {
+      opacity: 1;
+    }
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: var(--pos-sempit);
+      @media (min-aspect-ratio: 1/1) {
+        object-position: var(--pos-lebar);
+      }
+    }
+  }
+  /* Ken Burns: skala 1.08 → 1 sepanjang foto tampil (6 dtk + 1,2 dtk crossfade). Hanya bila boleh animasi. */
+  .js-anim .hero-slide img {
+    transform: scale(1.08);
+  }
+  .js-anim .hero-slide.zoom img {
+    transform: scale(1);
+    transition: transform 7200ms linear;
+  }
+  /* Overlay: biru-950 pekat di kiri → transparan di kanan (satu-satunya gradien beranda).
+     Mobile: teks memenuhi lebar, jadi opasitas minimum 0.7 di seluruh lebar (kontras AA). */
+  .hero-overlay {
+    background: linear-gradient(to right, rgb(7 26 51 / 0.9), rgb(7 26 51 / 0.72));
+    @media (width >= 48rem) {
+      background: linear-gradient(
+        to right,
+        rgb(7 26 51 / 0.92) 0%,
+        rgb(7 26 51 / 0.8) 45%,
+        rgb(7 26 51 / 0.25) 80%,
+        rgb(7 26 51 / 0) 100%
+      );
+    }
+  }
+
+  /* A1: kata naik 40px + opacity, stagger 60ms, 0.8s, power3.out. Hanya di bawah .js-anim */
+  .js-anim .hero-kata {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: hero-kata-naik 800ms cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 60ms + 100ms);
+  }
+  .js-anim p.hero-kata,
+  .js-anim div.hero-kata {
+    display: block;
+  }
+  .js-anim div.hero-kata {
+    display: flex;
+  }
+  @keyframes hero-kata-naik {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* A13 gelombang: pola 2× lebar digeser -50% dalam 10 dtk; berhenti saat slideshow dijeda */
+  .gelombang {
+    width: 200%;
+  }
+  .js-anim .gelombang {
+    animation: gelombang-geser 10s linear infinite;
+  }
+  .hero-slideshow[data-jeda] .gelombang {
+    animation-play-state: paused;
+  }
+  @keyframes gelombang-geser {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ---------- A5 marquee ---------- */
+  .marquee-baris {
+    display: flex;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-isi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  /* Duplikat & baris kedua hanya untuk animasi */
+  .marquee-duplikat,
+  .marquee-baris-dua {
+    display: none;
+  }
+  .js-anim {
+    .marquee-isi {
+      flex-wrap: nowrap;
+      flex-shrink: 0;
+      padding-right: 0.75rem;
+      animation: marquee-geser 45s linear infinite;
+    }
+    .marquee-duplikat {
+      display: flex;
+    }
+    .marquee-baris-dua {
+      display: flex;
+      .marquee-isi {
+        animation-direction: reverse;
+      }
+    }
+    .marquee:hover .marquee-isi,
+    .marquee:focus-within .marquee-isi,
+    .marquee[data-jeda] .marquee-isi {
+      animation-play-state: paused;
+    }
+  }
+  @keyframes marquee-geser {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
   /* A12 lightbox: layar penuh, latar gelap memudar */
   .lightbox {
     width: 100%;
