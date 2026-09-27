@@ -4,8 +4,8 @@
  * Memindai src/ dan mencetak semua placeholder "[ISI", konten `dummy: true`, dan statistik `null`.
  *
  *   npm run cek-konten              → laporan saja, selalu keluar dengan kode 0
- *   npm run cek-konten -- --ketat   → kode 1 jika masih ada placeholder [ISI] atau PUBLIC_SITE_URL belum diisi.
- *                                      Dummy & statistik null tetap dilaporkan, tidak menggagalkan.
+ *   npm run cek-konten -- --ketat   → kode 1 jika masih ada placeholder [ISI], `dummy: true`,
+ *                                      atau PUBLIC_SITE_URL belum diisi. Statistik null dilaporkan, tidak menggagalkan.
  */
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative, extname, sep } from "node:path";
@@ -127,15 +127,16 @@ console.log(
 if (ketat) {
   const masalah = [];
   if (hitung("[ISI]") > 0) masalah.push(`${hitung("[ISI]")} placeholder [ISI]`);
+  if (hitung("dummy") > 0) masalah.push(`${hitung("dummy")} konten dummy`);
   if (domainKosong) masalah.push("PUBLIC_SITE_URL belum diisi");
   if (masalah.length > 0) {
     console.error(`\n--ketat: GAGAL — ${masalah.join(", ")}. Belum siap rilis.\n`);
     process.exit(1);
   }
-  const sisa = hitung("dummy") + hitung("null statistik");
+  const sisaStatistik = hitung("null statistik");
   console.log(
-    sisa > 0
-      ? `\n--ketat: LULUS, tetapi ${sisa} dummy/statistik null masih ada — pastikan sudah disetujui sekolah.\n`
+    sisaStatistik > 0
+      ? `\n--ketat: LULUS. ${sisaStatistik} statistik masih null — section statistik disembunyikan di produksi.\n`
       : "\n--ketat: LULUS — siap rilis.\n",
   );
 }

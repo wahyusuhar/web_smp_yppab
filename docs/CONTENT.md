@@ -63,8 +63,10 @@ Helper wajib: `isIsi(v)` (true jika placeholder), `tampil(v)` (render placeholde
 
 ## 5. Script `npm run cek-konten`
 `scripts/cek-konten.mjs` memindai `src/` dan mencetak tabel: file, baris, jenis (`[ISI]` / `dummy` / `null` statistik).
-Keluar dengan kode 0 (hanya laporan), kecuali dijalankan dengan `--ketat` → kode 1 jika masih ada placeholder
-atau `PUBLIC_SITE_URL` belum diisi (dipakai sebelum rilis).
+Keluar dengan kode 0 (hanya laporan), kecuali dijalankan dengan `--ketat` → kode 1 jika masih ada placeholder `[ISI]`,
+konten `dummy: true`, atau `PUBLIC_SITE_URL` belum diisi (dipakai sebelum rilis).
+Statistik `null` tetap dilaporkan tetapi tidak menggagalkan `--ketat` (section statistik disembunyikan di produksi).
+Dummy yang sudah disetujui sekolah dilepas flag `dummy`-nya, bukan dibiarkan.
 
 ## 6. Elemen yang bergantung pada data placeholder
 Elemen yang tidak berguna atau rusak bila datanya placeholder (tautan `wa.me`, tombol WhatsApp melayang, Maps embed,
