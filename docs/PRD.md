@@ -37,7 +37,7 @@ dan menjadi hasil pertama Google untuk pencarian **"SMPS YPPAB"** serta variasin
 ## 5. Peta situs & kebutuhan per halaman
 | URL | Halaman | Isi wajib | Momen animasi utama |
 |---|---|---|---|
-| `/` | Beranda | Hero (h1 berisi "SMPS YPPAB"), ringkasan profil, keunggulan (maks 4), statistik, ekskul, berita terbaru (3), galeri cuplikan, CTA pendaftaran, peta | Hero reveal (A1) + marquee ekskul (A5) + scroll reveal (A2). Counter (A4) aktif otomatis saat statistik diisi (lihat F9) |
+| `/` | Beranda | Hero (h1 berisi "SMPS YPPAB"), ringkasan profil, keunggulan (maks 4), statistik, ekskul, berita terbaru (3), galeri cuplikan, CTA pendaftaran, peta | Slideshow latar hero 3 foto (A18) + reveal teks hero (A1) + marquee ekskul (A5) + scroll reveal (A2). Counter (A4) aktif otomatis saat statistik diisi (lihat F9) |
 | `/profil` | Profil Sekolah | Sejarah (timeline), visi, misi, identitas sekolah (tabel: NPSN, akreditasi, status, alamat), sambutan kepala sekolah | Timeline sejarah tergambar saat scroll (A6) |
 | `/guru-dan-staf` | Guru & Staf | Grid kartu (foto/avatar inisial, nama, jabatan/mapel) | Stagger reveal grid (A3) |
 | `/ekstrakurikuler` | Ekstrakurikuler | Daftar ekskul + jadwal + deskripsi singkat | Hover/focus reveal kartu (A14) |

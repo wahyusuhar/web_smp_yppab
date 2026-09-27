@@ -18,7 +18,10 @@ Bukan startup SaaS, bukan template universitas. Banyak ruang putih, biru dipakai
 
 Aturan:
 - Maksimal 1 warna di luar palet: `kuning-400 #FACC15` HANYA untuk badge kecil ("Pendaftaran Dibuka"). Tidak untuk tombol/latar.
-- Gradient hanya biru→biru (mis. `biru-800 → biru-600`), maksimal 1 per halaman. Di beranda gradien hanya di hero; CTA pendaftaran memakai latar solid `biru-800` + garis "dasi".
+- Gradient hanya biru→biru (mis. `biru-800 → biru-600`), maksimal 1 per halaman. Di beranda satu-satunya gradien adalah
+  overlay hero `biru-950` pekat (kiri) → transparan (kanan) di atas slideshow foto (A18); CTA pendaftaran memakai latar
+  solid `biru-800` + garis "dasi".
+- Teks di atas foto hero = putih, selalu di atas overlay. Kontras AA wajib dicek pada KETIGA foto slideshow, di area teks.
 - Teks di atas `biru-600`/lebih gelap = putih. Verifikasi kontras AA untuk setiap pasangan.
 
 ## 2. Tipografi
@@ -60,7 +63,7 @@ Library: GSAP + ScrollTrigger. Transisi halaman: Astro View Transitions.
 
 | ID | Nama | Di mana | Spesifikasi |
 |---|---|---|---|
-| A1 | Hero reveal | Hero beranda | h1 dipecah per kata, naik 40px + opacity, stagger 0.06s, durasi 0.8s, `power3.out`. Gambar hero TIDAK dianimasikan dari opacity 0 (menjaga LCP), hanya scale 1.08→1 |
+| A1 | Hero reveal (teks) | Hero beranda | h1 dipecah per kata, naik 40px + opacity, stagger 0.06s, durasi 0.8s, `power3.out`. Hanya TEKS hero; gambar hero diatur A18. Teks tetap di atas slideshow, tidak ikut berganti |
 | A2 | Scroll reveal | Heading section & paragraf | y 24px + opacity, 0.6s, trigger `top 85%`, sekali saja |
 | A3 | Stagger grid | Kartu guru, berita, fasilitas, grid masonry galeri | seperti A2, stagger 0.08s, maksimal 12 elemen dianimasikan per grid |
 | A4 | Counter | Statistik | 0 → nilai, 1.6s, mulai saat terlihat. Jika nilai placeholder → tidak dianimasikan. Selama semua statistik `null`, section disembunyikan di produksi (PRD F9) |
@@ -77,14 +80,28 @@ Library: GSAP + ScrollTrigger. Transisi halaman: Astro View Transitions.
 | A15 | Progress bar baca | Detail berita | bar tipis di atas halaman, `scaleX` 0 → 1 terikat scroll artikel (`transform-origin: left`) |
 | A16 | Drawer mobile | Menu mobile | transisi CSS: drawer `translateX` + overlay opacity, 250–300ms |
 | A17 | Tombol melayang | Tombol WhatsApp & kembali ke atas | muncul/hilang dengan transisi CSS opacity + translateY, 250ms |
+| A18 | Slideshow hero | Latar hero beranda | 3 foto (`hero-1`–`hero-3`) memenuhi hero sebagai latar, berganti tiap 6 dtk: crossfade opacity 1,2 dtk + zoom pelan (Ken Burns) scale 1.08→1 selama foto tampil. Detail di bawah tabel |
+
+**A18 — detail wajib:**
+- Foto 1 (`hero-1`) tampil langsung tanpa animasi opacity: `loading="eager"` + `fetchpriority="high"` (elemen LCP). Foto 2 dan 3 baru dimuat setelah event `load`.
+- Overlay gradien `biru-950` pekat (kiri) → transparan (kanan) di atas foto; teks hero putih di atasnya.
+- Indikator 3 titik + tombol jeda/putar (WCAG 2.2.2): elemen `<button>` dengan `aria-label`, bisa dipakai keyboard, titik aktif memakai `aria-current`.
+- Berhenti saat tab tidak aktif (`visibilitychange`) atau hero tidak terlihat (IntersectionObserver); lanjut otomatis saat kembali, kecuali pengguna menekan jeda.
+- `prefers-reduced-motion: reduce` → hanya foto 1, tanpa pergantian, tanpa zoom, tanpa kontrol slideshow.
+- Label "Foto ilustrasi" ikut berganti sesuai foto yang sedang tampil (dari `kredit.ts`).
+- `object-position` per foto diatur di data untuk 16:9 (desktop) dan 4:5 (mobile).
+- Tinggi hero: `100svh` di mobile, maksimal 760px di desktop.
+- Tanpa JS: hanya foto 1 yang terlihat.
 
 Halaman `/404` memakai A2. Halaman `/kontak` sengaja tenang: hanya A2 untuk heading.
 
 Aturan wajib animasi:
 - Hanya animasikan `transform` dan `opacity`. Tidak ada animasi `width/height/top/left`.
-- Durasi 0.25–0.9s (kecuali counter, marquee, gelombang, dan animasi yang terikat scroll).
+- Durasi 0.25–0.9s (kecuali counter, marquee, gelombang, animasi yang terikat scroll, dan slideshow hero A18:
+  crossfade 1,2 dtk, zoom Ken Burns sepanjang 6 dtk foto tampil).
 - Semua dimatikan saat `prefers-reduced-motion: reduce` → elemen langsung tampil di posisi akhir.
-- Konten harus terlihat tanpa JS: set state awal animasi lewat JS (class `js-anim` di `<html>`), bukan di CSS default.
+- Konten harus terlihat tanpa JS: set state awal animasi lewat JS (class `js-anim` di `<html>`, hanya dipasang bila
+  JavaScript aktif DAN reduced motion tidak aktif), bukan di CSS default.
 - Tidak ada scroll-jacking, tidak ada custom cursor, tidak ada smooth-scroll library.
 - Maksimal satu momen animasi "besar" per section.
 - Bersihkan ScrollTrigger saat navigasi View Transitions (`astro:before-swap`) agar tidak bocor.

@@ -28,8 +28,8 @@ Tolak foto yang jelas luar negeri (seragam asing, salju, tulisan bahasa lain) un
 ## 5. Daftar slot foto
 | Slot | Jumlah | Halaman | Wajib diganti foto asli sebelum rilis? |
 |---|---|---|---|
-| hero | 1 | Beranda | YA |
-| gedung | 1 | Profil, OG image | YA |
+| hero | 3 | Beranda (slideshow A18) | YA |
+| gedung | 1 | Profil; OG image hanya bila sudah foto asli (sampai itu OG versi teks) | YA |
 | kegiatan-kelas | 3 | Beranda, Profil | disarankan |
 | ekskul | 6 | Ekstrakurikuler | disarankan |
 | fasilitas | 6 | Fasilitas | YA |

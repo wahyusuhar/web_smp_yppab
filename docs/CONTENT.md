@@ -78,3 +78,8 @@ Elemen yang tidak berguna atau rusak bila datanya placeholder (tautan `wa.me`, t
 section statistik) mengikuti pola yang sama: **dev → kotak placeholder, produksi → disembunyikan**, dan otomatis muncul saat data diisi.
 Maps memakai `koordinat`, atau alamat lengkap bila koordinat masih `null`.
 Title beranda menghilangkan kota selama `alamat.kabupatenKota` placeholder (lihat SEO.md §2).
+
+**Foto gedung** (`stok/gedung-1`): selama masih placeholder SVG, di build produksi bingkai foto gedung TIDAK dirender dan
+layout di sekitarnya menyesuaikan (tidak ada ruang kosong); di dev placeholder tetap tampil. Komponen `Foto` dengan prop
+`opsional` + helper `modeFoto()` (src/lib/foto.ts) — halaman memakai `modeFoto()` untuk memilih layout.
+Gambar OG memakai versi teks (`public/og/og-default.png`) sampai foto gedung asli ada.

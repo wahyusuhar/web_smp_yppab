@@ -34,7 +34,8 @@ Tanpa §6, peringkat #1 tidak dijamin.
 - `<html lang="id">`, `<meta name="viewport">`, `<link rel="canonical">` absolut (pakai `site` di `astro.config`)
 - `site` diisi dari env `PUBLIC_SITE_URL`. Selama kosong, fallback ke `https://example.com` (URL placeholder tidak valid untuk Astro) dan build mencetak peringatan jelas di console. `npm run cek-konten --ketat` gagal bila `PUBLIC_SITE_URL` belum diisi.
 - `/404`, `/kredit-foto`, dan `/dev/*` diberi `<meta name="robots" content="noindex">` dan dikeluarkan dari sitemap
-- Open Graph + Twitter card; gambar OG 1200×630 dibuat statis di `public/og/` (biru–putih, teks "SMPS YPPAB")
+- Open Graph + Twitter card; gambar OG 1200×630 dibuat statis di `public/og/` (biru–putih, teks "SMPS YPPAB").
+  Versi teks ini dipakai sampai foto gedung asli sekolah tersedia; foto stok/placeholder tidak pernah dipakai sebagai OG.
 - Favicon lengkap (svg, ico, apple-touch-icon 180px) + `site.webmanifest` dengan `theme_color #1552B8`
 - `@astrojs/sitemap`, `public/robots.txt` menaut ke sitemap
 - Halaman 404 berstatus 404
