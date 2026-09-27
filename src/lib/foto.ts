@@ -45,6 +45,16 @@ export function cariFoto(path: string): HasilFoto {
   throw new Error(`[foto] Gambar "${path}" tidak ditemukan di src/assets/images/.`);
 }
 
+/**
+ * Mode tampil foto opsional (CONTENT.md §6, mis. foto gedung):
+ * gambar ada → "tampil"; masih placeholder SVG → "placeholder" di dev, "sembunyi" di produksi.
+ * Halaman memakai hasil ini untuk menyesuaikan layout (tanpa ruang kosong).
+ */
+export function modeFoto(path: string): "tampil" | "placeholder" | "sembunyi" {
+  if (cariFoto(path).jenis === "gambar") return "tampil";
+  return import.meta.env.DEV ? "placeholder" : "sembunyi";
+}
+
 /** true jika masih ada foto stok di slot tertentu (mis. "galeri") — untuk kalimat pemberitahuan di halaman. */
 export function adaFotoStok(slot: string): boolean {
   return kreditFoto.some((k) => k.slot === slot && k.stok);

@@ -89,3 +89,16 @@ ditandai dengan rujukannya, supaya dokumen utama tetap jadi sumber kebenaran.
 | 50 | Foto hero-2 & hero-3 | Setelah ±40 kandidat baru ditinjau (kebanyakan seragam SD/SMA, busana khas pesantren, atau label nama siswa terbaca), dipilih dua foto Pramuka penggalang karya Fajar Herlambang STUDIO (Unsplash License). Teks yang terbaca — label nama siswa, nomor peserta, tulisan badge, nama regu pada panji — **diburamkan** dengan masker bertepi lembut (hero-2: 2 area, hero-3: 7 area), lalu diperkecil ke 2400×1600. Perubahan dicatat di kredit: "diburamkan sebagian dan diubah ukurannya". Mengaburkan nama anak juga melindungi privasinya. |
 | 51 | Slot gedung di produksi | Selama placeholder, bingkai foto gedung tidak dirender di produksi dan layout menyesuaikan; di dev placeholder tetap tampil. Lewat prop `opsional` di `Foto` + helper `modeFoto()`. Gambar OG tetap versi teks sampai foto gedung asli ada. |
 | 52 | Class `js-anim` | `js` dipasang di `<html>` bila JavaScript aktif; `js-anim` tambahan hanya bila reduced motion TIDAK aktif. State awal animasi (mis. teks tersembunyi sebelum reveal) hanya berlaku di bawah `.js-anim`, sehingga konten selalu terlihat tanpa JS atau dengan reduced motion. |
+
+## Fase 4 — Beranda — 2026-09-28
+
+| # | Topik | Keputusan |
+|---|---|---|
+| 53 | A1 lewat CSS | Reveal teks hero per kata memakai animasi CSS (kata dipecah saat build, `animation-delay` per indeks, kurva setara `power3.out`), bukan GSAP: teks tidak menunggu JS dimuat. Hanya berlaku di bawah `html.js-anim`. GSAP dipakai untuk A2 (heading section) dan A4 (counter) di `src/scripts/animasi.ts`, hanya diimpor oleh halaman yang butuh. |
+| 54 | Tinggi hero | "100svh" ditafsirkan sebagai layar penuh DI BAWAH header sticky: `calc(100svh - 5rem)`, min 34rem, maks 760px mulai `lg`. Dengan begitu kontrol slideshow & gelombang tetap terlihat tanpa menggulir. |
+| 55 | Marquee (A5) & WCAG 2.2.2 | Marquee bergerak > 5 dtk, jadi selain berhenti saat hover/fokus juga diberi tombol "Jeda animasi daftar ekstrakurikuler". Tanpa JS / reduced motion: daftar statis terbungkus, tanpa duplikat. |
+| 56 | Pemuatan foto hero 2–3 | Dimuat lewat `requestIdleCallback` setelah event `load` (fallback `setTimeout`), terverifikasi dengan Performance API: foto 2–3 diminta setelah `loadEventEnd`. |
+| 57 | CSS inline | `build.inlineStylesheets: "always"`: CSS (±9 KB gzip) disisipkan di HTML sehingga tidak ada request CSS yang memblokir render. Diukur 5× (CPU 4× lambat): FCP/LCP median 480 ms (inline) vs 516 ms (eksternal). |
+| 58 | Kontras hero | Diukur dari piksel foto di bawah area teks (persentil 99 piksel paling terang) pada ketiga foto di 1280px dan 360px: rasio 7,3:1–10,3:1 (AA ≥ 4,5:1). Overlay mobile minimal 0,72 di seluruh lebar. |
+| 59 | Berita terbaru di beranda | Section "Berita terbaru" (PRD §5) ditambahkan di Fase 6 bersama content collection berita; saat ini belum ada sumber data berita. |
+| 60 | Lingkungan uji | Preview produksi dijalankan di port 4400 karena port 4321 dipakai server dev pengguna. Uji Fase 3 diulang terhadap build produksi (26/26 lulus). |

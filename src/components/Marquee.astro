@@ -1,0 +1,67 @@
+---
+/**
+ * A5 marquee: dua baris bergerak berlawanan arah, berhenti saat hover/fokus, dan punya tombol jeda (WCAG 2.2.2,
+ * karena bergerak lebih dari 5 detik). Tanpa JS atau dengan reduced motion: daftar statis terbungkus rapi.
+ * Isi untuk pembaca layar hanya daftar pertama; duplikat & baris kedua aria-hidden.
+ */
+import { Pause, Play } from "@lucide/astro";
+
+interface Props {
+  item: string[];
+  /** Nama daftar untuk label tombol jeda, mis. "daftar ekstrakurikuler" */
+  nama: string;
+}
+
+const { item, nama } = Astro.props;
+const kelasItem = "shrink-0 rounded-full border border-biru-100 bg-putih px-5 py-3 font-semibold text-biru-800";
+const dibalik = [...item].reverse();
+---
+
+<div class="marquee flex flex-col gap-3" data-marquee>
+  <div class="marquee-baris">
+    <ul class="marquee-isi">
+      {item.map((i) => <li class={kelasItem}>{i}</li>)}
+    </ul>
+    <ul class="marquee-isi marquee-duplikat" aria-hidden="true">
+      {item.map((i) => <li class={kelasItem}>{i}</li>)}
+    </ul>
+  </div>
+  <div class="marquee-baris marquee-baris-dua" aria-hidden="true">
+    <ul class="marquee-isi">
+      {dibalik.map((i) => <li class={kelasItem}>{i}</li>)}
+    </ul>
+    <ul class="marquee-isi">
+      {dibalik.map((i) => <li class={kelasItem}>{i}</li>)}
+    </ul>
+  </div>
+  <button
+    type="button"
+    class="inline-flex min-h-10 items-center gap-2 self-start rounded-full px-3 text-sm font-semibold text-biru-600 hover:bg-biru-50"
+    data-marquee-jeda
+    hidden
+  >
+    <Pause size={16} stroke-width={1.75} data-ikon-jeda />
+    <Play size={16} stroke-width={1.75} data-ikon-putar class="hidden" />
+    <span data-teks>Jeda animasi {nama}</span>
+  </button>
+</div>
+
+<script>
+  // Tombol jeda hanya relevan bila animasi berjalan (JS aktif & bukan reduced motion)
+  if (document.documentElement.classList.contains("js-anim")) {
+    for (const marquee of document.querySelectorAll<HTMLElement>("[data-marquee]")) {
+      const tombol = marquee.querySelector<HTMLButtonElement>("[data-marquee-jeda]");
+      const teks = tombol?.querySelector("[data-teks]");
+      if (!tombol || !teks) continue;
+      const nama = teks.textContent?.replace("Jeda animasi ", "") ?? "";
+      tombol.hidden = false;
+      tombol.addEventListener("click", () => {
+        const jeda = !marquee.hasAttribute("data-jeda");
+        marquee.toggleAttribute("data-jeda", jeda);
+        teks.textContent = `${jeda ? "Putar" : "Jeda"} animasi ${nama}`;
+        tombol.querySelector("[data-ikon-jeda]")?.classList.toggle("hidden", jeda);
+        tombol.querySelector("[data-ikon-putar]")?.classList.toggle("hidden", !jeda);
+      });
+    }
+  }
+</script>

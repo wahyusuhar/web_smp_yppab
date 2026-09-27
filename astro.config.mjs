@@ -20,6 +20,8 @@ const TIDAK_DI_SITEMAP = [/^\/404\/?$/, /^\/kredit-foto\/?$/, /^\/dev(\/|$)/];
 
 export default defineConfig({
   site: siteUrl,
+  // CSS (±9 KB gzip) di-inline ke HTML: menghapus request CSS yang memblokir render gambar LCP hero
+  build: { inlineStylesheets: "always" },
   integrations: [
     sitemap({
       filter: (page) => !TIDAK_DI_SITEMAP.some((pola) => pola.test(new URL(page).pathname)),

@@ -22,10 +22,10 @@ const { nilai, label, akhiran = "" } = Astro.props;
       nilai === null ? (
         <Isian nilai={null} />
       ) : (
-        <span data-counter={nilai}>
-          {nilai.toLocaleString("id-ID")}
+        <>
+          <span data-counter={nilai}>{nilai.toLocaleString("id-ID")}</span>
           {akhiran}
-        </span>
+        </>
       )
     }
   </p>

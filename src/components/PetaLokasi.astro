@@ -1,0 +1,52 @@
+---
+/**
+ * Peta Google Maps (PRD F10, CONTENT §6). Memakai koordinat, atau alamat lengkap bila koordinat belum ada.
+ * Selama keduanya placeholder: dev → kotak placeholder, produksi → tidak dirender.
+ * Gunakan `modePeta()` di halaman untuk menyembunyikan section pembungkusnya.
+ */
+import { MapPin } from "@lucide/astro";
+import { kueriPeta, modePeta } from "../lib/peta";
+
+interface Props {
+  class?: string;
+}
+
+const { class: kelas } = Astro.props;
+const kueri = kueriPeta();
+const mode = modePeta();
+---
+
+{
+  mode === "tampil" && kueri && (
+    <div class:list={["flex flex-col gap-3", kelas]}>
+      <iframe
+        src={`https://www.google.com/maps?q=${encodeURIComponent(kueri)}&output=embed`}
+        title="Peta lokasi SMPS YPPAB"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        class="aspect-video w-full rounded-gambar border border-abu-300"
+      />
+      <a
+        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(kueri)}`}
+        class="inline-flex items-center gap-2 self-start font-semibold text-biru-600 underline-offset-4 hover:underline"
+        rel="noopener"
+      >
+        <MapPin size={20} stroke-width={1.75} />
+        Buka di Google Maps
+      </a>
+    </div>
+  )
+}
+{
+  mode === "placeholder" && (
+    <div
+      class:list={[
+        "flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-gambar border border-dashed border-abu-300 bg-biru-50 p-6 text-center text-sm",
+        kelas,
+      ]}
+    >
+      <MapPin size={24} stroke-width={1.75} class="text-biru-600" />
+      Peta tampil setelah <code>koordinat</code> atau alamat lengkap diisi di sekolah.ts (placeholder, hanya di dev)
+    </div>
+  )
+}

@@ -1,50 +1,218 @@
 ---
-// Kerangka sementara sampai Fase 4 (beranda penuh).
+/**
+ * Beranda (PRD §5): hero slideshow (A18 + A1 + A13), profil singkat, keunggulan, statistik, ekskul (A5),
+ * cuplikan galeri, CTA pendaftaran, peta. Berita terbaru ditambahkan di Fase 6 bersama content collection berita.
+ */
+import { icons } from "@lucide/astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Isian from "../components/Isian.astro";
+import HeroSlideshow from "../components/HeroSlideshow.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Card from "../components/Card.astro";
+import Button from "../components/Button.astro";
+import Badge from "../components/Badge.astro";
+import StatCounter from "../components/StatCounter.astro";
+import Marquee from "../components/Marquee.astro";
 import Foto from "../components/Foto.astro";
+import PetaLokasi from "../components/PetaLokasi.astro";
 import { sekolah } from "../data/sekolah";
-import { saringBaris } from "../lib/isian";
+import { fotoGaleri } from "../data/galeri";
+import { modeElemen } from "../lib/isian";
+import { modeFoto } from "../lib/foto";
+import { modePeta } from "../lib/peta";
 import { judulBeranda } from "../lib/seo";
+import { tautanWhatsApp } from "../lib/whatsapp";
 
-const identitas = saringBaris([
-  { label: "Status", nilai: sekolah.status },
-  { label: "NPSN", nilai: sekolah.npsn },
-  { label: "Akreditasi", nilai: sekolah.akreditasi },
-  { label: "Provinsi", nilai: sekolah.alamat.provinsi },
-]);
+const { statistik, pendaftaran } = sekolah;
+const modeStatistik = modeElemen(Object.values(statistik));
+const adaFotoGedung = modeFoto("stok/gedung-1") !== "sembunyi";
+const ekskulDummy = sekolah.ekstrakurikuler.some((e) => e.dummy);
+const cuplikanGaleri = fotoGaleri.filter((f) => modeFoto(f.src) === "tampil").slice(0, 4);
+const wa = tautanWhatsApp();
 ---
 
 <BaseLayout
   judul={judulBeranda()}
   deskripsi="SMPS YPPAB adalah SMP swasta di Provinsi Jambi untuk kelas 7–9. Lihat profil sekolah, ekstrakurikuler, berita, dan info Penerimaan Murid Baru (SPMB)."
 >
-  <div class="container-situs section-y">
-    <p class="text-eyebrow text-biru-600 uppercase">Sedang dibangun</p>
-    <h1 class="text-display">{sekolah.nama}</h1>
-    <p class="teks-lebar mt-6">{sekolah.ringkasan.teks}</p>
-    <dl class="mt-6">
-      {
-        identitas.map((b) => (
-          <div class="flex gap-4">
-            <dt class="font-semibold">{b.label}</dt>
-            <dd>
-              <Isian nilai={b.nilai} />
-            </dd>
-          </div>
-        ))
-      }
-    </dl>
-    <div class="mt-8 grid gap-4 md:grid-cols-2">
-      <Foto
-        src="stok/hero-1"
-        alt="Ilustrasi: dua siswa SMP berseragam putih-biru membaca bersama di halaman sekolah"
-        rasio="16/9"
-        posisi="50% 15%"
-        sizes="(min-width: 768px) 50vw, 100vw"
-        class="rounded-gambar"
-      />
-      <Foto src="stok/gedung-1" alt="Placeholder foto gedung sekolah" rasio="16/9" class="rounded-gambar" />
+  <HeroSlideshow />
+
+  <!-- Profil singkat -->
+  <section class="section-y" aria-labelledby="judul-profil">
+    <div class="container-situs grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div class="flex flex-col gap-6">
+        <SectionHeading id="judul-profil" eyebrow="Tentang kami" judul="Mengenal SMPS YPPAB" />
+        <p class="teks-lebar">{sekolah.ringkasan.teks}</p>
+        <p class="teks-lebar">
+          <span class="font-semibold text-biru-800">Visi kami:</span>
+          {sekolah.visi.teks}
+        </p>
+        <div>
+          <Button href="/profil/" varian="secondary">Selengkapnya tentang sekolah</Button>
+        </div>
+      </div>
+      <!-- Foto dengan blok offset biru-100 (DESIGN §5). Foto gedung hanya tampil bila sudah ada (CONTENT §6). -->
+      <div class:list={["relative", adaFotoGedung && "grid grid-cols-2 gap-4"]}>
+        <div class="absolute -right-3 -bottom-3 h-2/3 w-2/3 rounded-gambar bg-biru-100" aria-hidden="true"></div>
+        <Foto
+          src="stok/kegiatan-kelas-1"
+          alt="Ilustrasi: siswa belajar di dalam kelas dengan meja dan kursi kayu"
+          rasio={adaFotoGedung ? "3/4" : "4/3"}
+          sizes="(min-width: 1024px) 40vw, 100vw"
+          class="relative rounded-gambar"
+        />
+        <Foto
+          src="stok/gedung-1"
+          alt="Foto gedung sekolah"
+          rasio="3/4"
+          sizes="(min-width: 1024px) 20vw, 50vw"
+          class="relative mt-12 rounded-gambar"
+          opsional
+        />
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Keunggulan (maks 4) -->
+  <section class="section-y bg-biru-50" aria-labelledby="judul-keunggulan">
+    <div class="container-situs flex flex-col gap-12">
+      <SectionHeading
+        id="judul-keunggulan"
+        eyebrow="Keseharian di sekolah"
+        judul="Yang orang tua tanyakan, kami jawab di sini"
+        deskripsi="Empat hal yang paling sering ditanyakan saat orang tua berkunjung ke sekolah."
+      />
+      <ul class="grid gap-6 sm:grid-cols-2">
+        {
+          sekolah.keunggulan.slice(0, 4).map((k) => {
+            const Ikon = icons[k.ikon as keyof typeof icons];
+            return (
+              <li>
+                <Card judul={k.judul} dummy={k.dummy}>
+                  {Ikon && <Ikon slot="media" size={24} stroke-width={1.75} class="mx-6 mt-6 text-biru-600" />}
+                  {k.deskripsi}
+                </Card>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Statistik: disembunyikan di produksi selama semua nilai null (PRD F9) -->
+  {
+    modeStatistik !== "sembunyi" && (
+      <section class="section-y" aria-labelledby="judul-statistik">
+        <div class="container-situs flex flex-col gap-12">
+          <SectionHeading id="judul-statistik" eyebrow="Dalam angka" judul="SMPS YPPAB dalam angka" />
+          <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCounter nilai={statistik.siswa} label="Siswa" />
+            <StatCounter nilai={statistik.guru} label="Guru" />
+            <StatCounter nilai={statistik.rombel} label="Rombongan belajar" />
+            <StatCounter nilai={statistik.ekstrakurikuler} label="Ekstrakurikuler" />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Ekstrakurikuler (A5 marquee) -->
+  <section class="section-y overflow-hidden" aria-labelledby="judul-ekskul">
+    <div class="container-situs flex flex-col gap-10">
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <SectionHeading
+          id="judul-ekskul"
+          eyebrow="Ekstrakurikuler"
+          judul="Pramuka wajib, sisanya pilih sesuai minat"
+          deskripsi="Kelas 7 mengikuti Pramuka. Setelah itu siswa bebas memilih kegiatan olahraga, seni, atau bahasa."
+        />
+        {ekskulDummy && <Badge varian="contoh" class="self-start md:self-end" />}
+      </div>
+      <Marquee item={sekolah.ekstrakurikuler.map((e) => e.nama)} nama="daftar ekstrakurikuler" />
+      <div>
+        <Button href="/ekstrakurikuler/" varian="secondary">Lihat jadwal ekstrakurikuler</Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cuplikan galeri -->
+  {
+    cuplikanGaleri.length > 0 && (
+      <section class="section-y bg-biru-50" aria-labelledby="judul-galeri">
+        <div class="container-situs flex flex-col gap-10">
+          <SectionHeading
+            id="judul-galeri"
+            eyebrow="Galeri"
+            judul="Suasana belajar dan kegiatan"
+            deskripsi="Foto kegiatan SMPS YPPAB akan segera kami perbarui dengan dokumentasi asli sekolah."
+          />
+          <ul class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {cuplikanGaleri.map((f) => (
+              <li>
+                <Foto src={f.src} alt={f.alt} rasio="1/1" sizes="(min-width: 1024px) 25vw, 50vw" class="rounded-gambar" />
+              </li>
+            ))}
+          </ul>
+          <div>
+            <Button href="/galeri/" varian="secondary">Buka galeri</Button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- CTA pendaftaran: latar solid biru-800 + garis "dasi" (DESIGN §1, §5) -->
+  <section class="latar-gelap relative isolate overflow-hidden bg-biru-800 section-y" aria-labelledby="judul-cta">
+    <svg
+      class="absolute inset-y-0 right-0 -z-10 h-full w-1/2 text-biru-400 opacity-40"
+      viewBox="0 0 400 400"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <line x1="120" y1="0" x2="400" y2="280" stroke="currentColor" stroke-width="2"></line>
+      <line x1="200" y1="0" x2="400" y2="200" stroke="currentColor" stroke-width="2"></line>
+      <line x1="280" y1="0" x2="400" y2="120" stroke="currentColor" stroke-width="2"></line>
+    </svg>
+    <div class="container-situs flex flex-col gap-8">
+      {pendaftaran.dibuka && <Badge varian="kuning" class="self-start">Pendaftaran Dibuka</Badge>}
+      <SectionHeading
+        id="judul-cta"
+        eyebrow="Penerimaan Murid Baru (SPMB)"
+        judul="Ingin mendaftarkan anak ke SMPS YPPAB?"
+        deskripsi="Lihat jadwal, syarat, dan alur pendaftaran. Jika ada yang ingin ditanyakan, hubungi kami pada jam layanan."
+        diLatarGelap
+      />
+      <div class="flex flex-wrap gap-3">
+        <Button href="/pendaftaran/" diLatarGelap>Info pendaftaran</Button>
+        {
+          wa ? (
+            <Button href={wa} varian="secondary" panah={false} diLatarGelap rel="noopener">
+              Tanya via WhatsApp
+            </Button>
+          ) : (
+            <Button href="/kontak/" varian="secondary" diLatarGelap>
+              Hubungi sekolah
+            </Button>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Peta: disembunyikan di produksi selama koordinat & alamat masih placeholder (PRD F10) -->
+  {
+    modePeta() !== "sembunyi" && (
+      <section class="section-y" aria-labelledby="judul-peta">
+        <div class="container-situs flex flex-col gap-10">
+          <SectionHeading id="judul-peta" eyebrow="Lokasi" judul="Datang ke sekolah" />
+          <PetaLokasi />
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>
+
+<script>
+  import { pasangAnimasiGulir } from "../scripts/animasi";
+  pasangAnimasiGulir();
+</script>
