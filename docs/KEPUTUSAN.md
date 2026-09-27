@@ -55,6 +55,7 @@ ditandai dengan rujukannya, supaya dokumen utama tetap jadi sumber kebenaran.
 | 31 | Aturan teks/logo terbaca | Foto dicek di ukuran final skala 1:1. Ditolak bila nama sekolah lain, nama siswa, merek, atau teks lain terbaca. Lambang tanpa teks (OSIS, Tut Wuri Handayani) dan tulisan yang tidak lagi terbaca setelah diperkecil diterima. |
 | 32 | Foto tanpa orang | Untuk slot tanpa foto siswa Indonesia yang layak (futsal, UKS, ruang kelas, lab IPA, perpustakaan, lapangan) dipakai foto suasana/benda tanpa orang, sesuai arahan. Benda/ruang dari luar negeri diterima selama tidak ada teks, salju, atau ciri asing yang mencolok. |
 | 33 | Slot gedung | Sengaja placeholder: foto gedung sekolah lain akan dibaca sebagai gedung sekolah ini (halaman Profil & gambar OG). Lihat ASSETS-TODO.md. |
-| 34 | Hero | `hero-1.jpg` (Pexels 12719300): landscape 3:2. Subjek (dua siswa SMP) di sisi kiri-tengah; saat crop 4:5 di mobile pakai `object-position` ±30% horizontal. Dua siswi di sisi kanan berseragam SD (merah) — terpotong di 4:5, terlihat di 16:9. |
+| 34 | Hero | ~~Crop lewat `object-position`.~~ Direvisi di #37. |
 | 35 | Penomoran galeri | Foto galeri yang lolos diberi nomor 1–9; slot 10–12 placeholder. |
+| 37 | Hero dipotong permanen (merevisi #34) | File sumber Pexels 12719300 (7655×5106) dipotong ke area x 0–3650, y 1276–4850 (3650×3574) sehingga dua siswi berseragam SD tidak ada di file sama sekali, lalu diperkecil ke 2400×2350. Posisi yang disarankan untuk `object-fit: cover`: 16:9 → `object-position: 50% 15%`, 4:5 → `75% 50%` (kedua siswa utuh). |
 | 36 | Tipe lisensi | `LisensiFoto` di `kredit.ts` menulis lisensi CC lengkap dengan versi (mis. "CC BY-SA 4.0") karena wajib untuk atribusi. |

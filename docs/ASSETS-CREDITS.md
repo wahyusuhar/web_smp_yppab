@@ -3,6 +3,7 @@
 Salinan dari `src/data/kredit.ts` (sumber utama). Wajib diperbarui setiap kali `kredit.ts` berubah (docs/ASSETS.md §4).
 Semua file ada di `src/assets/images/stok/`, diunduh dari URL unduhan resmi yang tertera di halaman foto,
 diperkecil ke sisi panjang maks. 2400px (hero) / 2000px (lainnya), metadata EXIF dibuang.
+`hero-1.jpg` juga dipotong (area x 0–3650, y 1276–4850 dari file asli 7655×5106) — lihat KEPUTUSAN #37.
 
 Lisensi CC BY / CC BY-SA mewajibkan atribusi (nama pembuat, lisensi, tautan) — ditampilkan di halaman `/kredit-foto`.
 CC BY-SA: foto yang diubah (crop/resize) tetap berlisensi CC BY-SA.
