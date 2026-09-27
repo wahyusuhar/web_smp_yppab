@@ -4,6 +4,7 @@ Salinan dari `src/data/kredit.ts` (sumber utama). Wajib diperbarui setiap kali `
 Semua file ada di `src/assets/images/stok/`, diunduh dari URL unduhan resmi yang tertera di halaman foto,
 diperkecil ke sisi panjang maks. 2400px (hero) / 2000px (lainnya), metadata EXIF dibuang.
 `hero-1.jpg` juga dipotong (area x 0–3650, y 1276–4850 dari file asli 7655×5106) — lihat KEPUTUSAN #37.
+`hero-2.jpg` dan `hero-3.jpg`: label nama siswa, nomor peserta, tulisan badge, dan nama regu diburamkan (KEPUTUSAN #50).
 
 Lisensi CC BY / CC BY-SA mewajibkan atribusi (nama pembuat, lisensi, tautan) — ditampilkan di halaman `/kredit-foto`.
 CC BY-SA: foto yang diubah (crop/resize) tetap berlisensi CC BY-SA.
@@ -11,6 +12,8 @@ CC BY-SA: foto yang diubah (crop/resize) tetap berlisensi CC BY-SA.
 | Slot | File | URL halaman | Fotografer | Lisensi | Tanggal unduh | Perubahan |
 |---|---|---|---|---|---|---|
 | hero | `hero-1.jpg` | https://www.pexels.com/photo/boys-and-girls-in-school-uniforms-at-picnic-12719300/ | Roman Odintsov | Pexels License | 2026-09-28 | dipotong dan diubah ukurannya |
+| hero | `hero-2.jpg` | https://unsplash.com/photos/scout-in-uniform-holding-flag-VuwOF4ZWcCc | Fajar Herlambang STUDIO | Unsplash License | 2026-09-28 | diburamkan sebagian dan diubah ukurannya |
+| hero | `hero-3.jpg` | https://unsplash.com/photos/scouts-in-tan-uniforms-holding-poles-a5mX--9qrx8 | Fajar Herlambang STUDIO | Unsplash License | 2026-09-28 | diburamkan sebagian dan diubah ukurannya |
 | kegiatan-kelas | `kegiatan-kelas-1.jpg` | https://www.pexels.com/photo/students-learning-in-a-classroom-in-indonesia-35548840/ | el jusuf | Pexels License | 2026-09-28 | diubah ukurannya |
 | kegiatan-kelas | `kegiatan-kelas-2.jpg` | https://commons.wikimedia.org/wiki/File:Literasi_Siswa_SMP_Negeri_Satap_Oebelo_Kab.TTS.jpg | Dianadola | CC BY-SA 4.0 | 2026-09-28 | diubah ukurannya |
 | kegiatan-kelas | `kegiatan-kelas-3.jpg` | https://commons.wikimedia.org/wiki/File:Student_at_SMP_Negeri_2_Kotabaru.jpg | RusdianaDablang | CC BY-SA 4.0 | 2026-09-28 | diubah ukurannya |

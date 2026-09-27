@@ -32,7 +32,11 @@ export interface KreditFoto {
   /** Judul karya di halaman sumber. Wajib untuk lisensi CC (atribusi TASL). */
   judul?: string;
   /** Perubahan terhadap file asli; wajib disebut untuk CC BY / CC BY-SA. `null` = tidak diubah. */
-  perubahan: "diubah ukurannya" | "dipotong dan diubah ukurannya" | null;
+  perubahan:
+    | "diubah ukurannya"
+    | "dipotong dan diubah ukurannya"
+    | "diburamkan sebagian dan diubah ukurannya"
+    | null;
 }
 
 /** URL teks lisensi, untuk tautan di /kredit-foto. */
@@ -61,6 +65,26 @@ export const kreditFoto: KreditFoto[] = [
     tanggalUnduh: "2026-09-28",
     stok: true,
     perubahan: "dipotong dan diubah ukurannya",
+  },
+  {
+    slot: "hero",
+    file: "stok/hero-2.jpg",
+    sumber: "https://unsplash.com/photos/scout-in-uniform-holding-flag-VuwOF4ZWcCc",
+    fotografer: "Fajar Herlambang STUDIO",
+    lisensi: "Unsplash License",
+    tanggalUnduh: "2026-09-28",
+    stok: true,
+    perubahan: "diburamkan sebagian dan diubah ukurannya",
+  },
+  {
+    slot: "hero",
+    file: "stok/hero-3.jpg",
+    sumber: "https://unsplash.com/photos/scouts-in-tan-uniforms-holding-poles-a5mX--9qrx8",
+    fotografer: "Fajar Herlambang STUDIO",
+    lisensi: "Unsplash License",
+    tanggalUnduh: "2026-09-28",
+    stok: true,
+    perubahan: "diburamkan sebagian dan diubah ukurannya",
   },
   {
     slot: "kegiatan-kelas",
