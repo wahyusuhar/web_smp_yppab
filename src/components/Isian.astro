@@ -1,0 +1,28 @@
+---
+/**
+ * Render nilai dari src/data/sekolah.ts.
+ * Placeholder tampil sebagai teks bergaris putus-putus di dev, dan "–" di build produksi.
+ */
+import { isIsi, tampil } from "../lib/isian";
+
+interface Props {
+  nilai: string | number | null | undefined;
+}
+
+const { nilai } = Astro.props;
+const placeholder = isIsi(nilai);
+const teks = tampil(nilai);
+---
+
+{
+  placeholder && import.meta.env.DEV ? (
+    <span
+      class="rounded border border-dashed border-abu-300 bg-biru-50 px-1 text-abu-700"
+      title="Placeholder — isi di src/data/sekolah.ts"
+    >
+      {teks}
+    </span>
+  ) : (
+    teks
+  )
+}
