@@ -1,0 +1,63 @@
+---
+/**
+ * Guru & staf (PRD §5): grid kartu avatar inisial + nama + jabatan, A3 stagger.
+ * Nama asli guru adalah fakta terverifikasi (CONTENT §1): selama placeholder, kartu tidak dirender di produksi;
+ * bila tidak ada satu pun, tampil satu kalimat pemberitahuan.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+import Avatar from "../components/Avatar.astro";
+import Isian from "../components/Isian.astro";
+import Button from "../components/Button.astro";
+import { sekolah } from "../data/sekolah";
+import { saringBaris, isIsi } from "../lib/isian";
+
+const semua = [
+  { nilai: sekolah.kepalaSekolah.nama, label: "Kepala sekolah", foto: sekolah.kepalaSekolah.foto, jabatan: "Kepala sekolah", dummy: false },
+  ...sekolah.guru.map((g) => ({ nilai: g.nama, label: g.nama, foto: g.foto, jabatan: g.jabatan, dummy: g.dummy })),
+];
+// saringBaris: di produksi baris dengan nama placeholder dibuang
+const daftar = saringBaris(semua);
+---
+
+<BaseLayout
+  judul="Guru dan Staf – SMPS YPPAB"
+  deskripsi="Daftar guru dan tenaga kependidikan SMPS YPPAB beserta jabatan dan mata pelajaran yang diampu untuk siswa kelas 7, 8, dan 9 di sekolah kami."
+  breadcrumb={[{ label: "Guru & Staf", href: "/guru-dan-staf/" }]}
+  h1="Guru dan Staf SMPS YPPAB"
+  pengantar="Wali kelas dan guru mata pelajaran yang mendampingi siswa setiap hari. Orang tua dapat menghubungi guru lewat tata usaha pada jam layanan."
+>
+  <section class="section-y" aria-label="Daftar guru dan staf">
+    <div class="container-situs flex flex-col gap-10">
+      {
+        daftar.length > 0 ? (
+          <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-stagger>
+            {daftar.map((g) => (
+              <li>
+                <Card judul={isIsi(g.nilai) ? String(g.nilai) : g.nilai} dummy={g.dummy}>
+                  <div slot="media" class="px-6 pt-6">
+                    <Avatar nama={g.nilai} foto={g.foto} />
+                  </div>
+                  {(!isIsi(g.jabatan) || import.meta.env.DEV) && <Isian nilai={g.jabatan} />}
+                </Card>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="teks-lebar rounded-kartu border border-biru-100 bg-biru-50 p-6 text-biru-800">
+            Data guru dan staf SMPS YPPAB sedang diperbarui. Untuk keperluan mendesak, silakan hubungi sekolah.
+          </p>
+        )
+      }
+      <div class="flex flex-wrap gap-3">
+        <Button href="/kontak/" varian="secondary">Hubungi sekolah</Button>
+        <Button href="/pendaftaran/" varian="ghost">Info pendaftaran</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { pasangAnimasiGulir } from "../scripts/animasi";
+  pasangAnimasiGulir();
+</script>
