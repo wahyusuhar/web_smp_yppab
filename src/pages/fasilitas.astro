@@ -1,0 +1,53 @@
+---
+/**
+ * Fasilitas (PRD §5): kartu foto + deskripsi, A8 parallax ringan pada foto (nonaktif < 768px).
+ * Foto placeholder → varian kartu tanpa foto (Card), tanpa parallax.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+import Button from "../components/Button.astro";
+import { sekolah } from "../data/sekolah";
+---
+
+<BaseLayout
+  judul="Fasilitas Sekolah – SMPS YPPAB"
+  deskripsi="Gambaran fasilitas belajar di SMPS YPPAB beserta penjelasan singkat fungsi setiap ruang dan kegiatan siswa kelas 7 sampai 9 yang memakainya sehari-hari."
+  breadcrumb={[{ label: "Fasilitas", href: "/fasilitas/" }]}
+  h1="Fasilitas SMPS YPPAB"
+  pengantar="Ruang dan sarana yang dipakai siswa untuk belajar, berlatih, dan berkegiatan setiap hari di sekolah."
+>
+  <section class="section-y" aria-label="Daftar fasilitas">
+    <div class="container-situs flex flex-col gap-10">
+      <ul class="grid gap-6 md:grid-cols-2">
+        {
+          sekolah.fasilitas.map((f) => (
+            <li data-parallax>
+              <Card
+                judul={f.nama}
+                dummy={f.dummy}
+                ikon={f.ikon}
+                foto={{
+                  src: `stok/${f.gambar}`,
+                  alt: `Ilustrasi: ${f.nama.toLowerCase()}`,
+                  rasio: "16/10",
+                  sizes: "(min-width: 768px) 50vw, 100vw",
+                }}
+              >
+                {f.deskripsi}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="flex flex-wrap gap-3">
+        <Button href="/pendaftaran/">Info pendaftaran</Button>
+        <Button href="/kontak/" varian="secondary">Jadwalkan kunjungan</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { pasangAnimasiGulir } from "../scripts/animasi";
+  pasangAnimasiGulir();
+</script>
