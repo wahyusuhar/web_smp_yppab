@@ -1,0 +1,68 @@
+---
+/**
+ * Ekstrakurikuler (PRD §5): kartu foto + nama + jadwal + deskripsi, A14 hover/focus reveal (lihat global.css).
+ * Foto placeholder → varian kartu tanpa foto (Card). Jadwal placeholder disembunyikan di produksi (saringBaris).
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Card from "../components/Card.astro";
+import Isian from "../components/Isian.astro";
+import Button from "../components/Button.astro";
+import { CalendarDays } from "@lucide/astro";
+import { sekolah } from "../data/sekolah";
+import { saringBaris } from "../lib/isian";
+
+const ekskul = sekolah.ekstrakurikuler.map((e) => ({
+  ...e,
+  jadwal: saringBaris([{ label: "Jadwal", nilai: e.jadwal }])[0],
+}));
+---
+
+<BaseLayout
+  judul="Ekstrakurikuler – SMPS YPPAB"
+  deskripsi="Pilihan kegiatan ekstrakurikuler di SMPS YPPAB beserta jadwal latihan dan penjelasan singkatnya, termasuk Pramuka yang wajib diikuti siswa kelas 7."
+  breadcrumb={[{ label: "Ekstrakurikuler", href: "/ekstrakurikuler/" }]}
+  h1="Ekstrakurikuler di SMPS YPPAB"
+  pengantar="Pramuka wajib untuk kelas 7. Setelah itu siswa memilih kegiatan olahraga, seni, atau bahasa sesuai minat, dengan pendampingan guru pembina."
+>
+  <section class="section-y" aria-label="Daftar ekstrakurikuler">
+    <div class="container-situs flex flex-col gap-10">
+      <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-stagger>
+        {
+          ekskul.map((e) => (
+            <li>
+              <Card
+                judul={e.nama}
+                dummy={e.dummy}
+                ikon={e.ikon}
+                foto={{ src: `stok/${e.gambar}`, alt: `Ilustrasi: kegiatan ${e.nama.toLowerCase()}` }}
+                class="kartu-ekskul"
+              >
+                <span class="aksen-ekskul -mt-1 mb-3" aria-hidden="true" />
+                <div class="flex flex-col gap-3" data-detail>
+                  {e.jadwal && (
+                    <p class="flex items-center gap-2 text-sm font-semibold text-biru-800">
+                      <CalendarDays size={20} stroke-width={1.75} class="shrink-0 text-biru-600" />
+                      <span>
+                        {e.jadwal.label}: <Isian nilai={e.jadwal.nilai} />
+                      </span>
+                    </p>
+                  )}
+                  <p>{e.deskripsi}</p>
+                </div>
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="flex flex-wrap gap-3">
+        <Button href="/pendaftaran/">Info pendaftaran</Button>
+        <Button href="/kontak/" varian="secondary">Tanya pembina lewat sekolah</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { pasangAnimasiGulir } from "../scripts/animasi";
+  pasangAnimasiGulir();
+</script>

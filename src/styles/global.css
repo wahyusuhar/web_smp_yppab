@@ -337,6 +337,45 @@
     }
   }
 
+  /* ---------- A14 hover/focus reveal kartu ekskul ----------
+     Isi kartu SELALU terlihat penuh (kontras AA & bisa dibaca tanpa hover/keyboard). Yang "terungkap" saat hover /
+     :focus-within hanya lapisan dekoratif: foto membesar 1.05, garis aksen di bawah judul (scaleX 0 → 1),
+     detail naik 4px. Hanya di perangkat ber-hover dan bila boleh animasi. */
+  .kartu-ekskul .aksen-ekskul {
+    display: block;
+    height: 3px;
+    width: 3rem;
+    border-radius: 9999px;
+    background-color: var(--color-biru-400);
+    transform-origin: left;
+  }
+  @media (hover: hover) {
+    .js-anim .kartu-ekskul {
+      figure img {
+        transition: transform 400ms ease-out;
+      }
+      .aksen-ekskul {
+        transform: scaleX(0);
+        transition: transform 300ms ease-out;
+      }
+      [data-detail] {
+        transition: transform 300ms ease-out;
+      }
+      &:hover,
+      &:focus-within {
+        figure img {
+          transform: scale(1.05);
+        }
+        .aksen-ekskul {
+          transform: scaleX(1);
+        }
+        [data-detail] {
+          transform: translateY(-4px);
+        }
+      }
+    }
+  }
+
   /* A12 lightbox: layar penuh, latar gelap memudar */
   .lightbox {
     width: 100%;
