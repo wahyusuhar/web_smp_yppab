@@ -1,0 +1,88 @@
+---
+// Kredit foto (docs/ASSETS.md §6). noindex & tidak masuk sitemap (SEO.md §3).
+// Kerangka HTML sementara; dipindah ke BaseLayout di Fase 3.
+import "../styles/global.css";
+import { kreditFoto, URL_LISENSI, wajibAtribusi } from "../data/kredit";
+
+const denganAtribusi = kreditFoto.filter((k) => wajibAtribusi(k.lisensi));
+const lainnya = kreditFoto.filter((k) => !wajibAtribusi(k.lisensi));
+---
+
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kredit Foto – SMPS YPPAB</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <main class="container-situs section-y">
+      <h1 class="text-h2">Kredit Foto</h1>
+      <p class="teks-lebar mt-4">
+        Sebagian foto di website SMPS YPPAB adalah foto ilustrasi dari penyedia foto bebas pakai, bukan foto kegiatan
+        sekolah. Foto-foto ini ditandai label "Foto ilustrasi" dan akan diganti dengan dokumentasi asli sekolah.
+      </p>
+
+      {
+        denganAtribusi.length > 0 && (
+          <section class="mt-12" aria-labelledby="judul-cc">
+            <h2 id="judul-cc" class="text-h3">Foto berlisensi Creative Commons</h2>
+            <ul class="mt-6 grid gap-4">
+              {denganAtribusi.map((k) => (
+                <li class="rounded-kartu border border-abu-300 p-5">
+                  <p class="font-semibold text-biru-800">
+                    <a href={k.sumber} class="underline underline-offset-4 hover:text-biru-600" rel="noopener">
+                      {k.judul ?? k.file}
+                    </a>
+                  </p>
+                  <p class="mt-1">
+                    oleh {k.fotografer}, dilisensikan di bawah{" "}
+                    <a href={URL_LISENSI[k.lisensi]} class="text-biru-600 underline underline-offset-4" rel="license noopener">{k.lisensi}</a>.{k.perubahan && ` Foto telah ${k.perubahan}.`}
+                  </p>
+                  <p class="mt-1 text-sm">Dipakai di: {k.slot}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      <section class="mt-12" aria-labelledby="judul-lain">
+        <h2 id="judul-lain" class="text-h3">Foto lainnya</h2>
+        <div class="mt-6 overflow-x-auto">
+          <table class="w-full min-w-xl text-left text-sm">
+            <caption class="sr-only">Daftar foto berlisensi Unsplash, Pexels, dan CC0</caption>
+            <thead class="border-b border-abu-300 text-biru-800">
+              <tr>
+                <th scope="col" class="py-2 pr-4">Dipakai di</th>
+                <th scope="col" class="py-2 pr-4">Fotografer</th>
+                <th scope="col" class="py-2 pr-4">Lisensi</th>
+                <th scope="col" class="py-2">Perubahan</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                lainnya.map((k) => (
+                  <tr class="border-b border-abu-300">
+                    <td class="py-2 pr-4">{k.slot}</td>
+                    <td class="py-2 pr-4">
+                      <a href={k.sumber} class="text-biru-600 underline underline-offset-4" rel="noopener">
+                        {k.fotografer}
+                      </a>
+                    </td>
+                    <td class="py-2 pr-4">
+                      <a href={URL_LISENSI[k.lisensi]} class="text-biru-600 underline underline-offset-4" rel="license noopener">
+                        {k.lisensi}
+                      </a>
+                    </td>
+                    <td class="py-2">{k.perubahan ?? "–"}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

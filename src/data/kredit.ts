@@ -29,6 +29,26 @@ export interface KreditFoto {
   tanggalUnduh: string;
   /** true = foto stok, bukan foto sekolah → label "Foto ilustrasi" tampil */
   stok: boolean;
+  /** Judul karya di halaman sumber. Wajib untuk lisensi CC (atribusi TASL). */
+  judul?: string;
+  /** Perubahan terhadap file asli; wajib disebut untuk CC BY / CC BY-SA. `null` = tidak diubah. */
+  perubahan: "diubah ukurannya" | "dipotong dan diubah ukurannya" | null;
+}
+
+/** URL teks lisensi, untuk tautan di /kredit-foto. */
+export const URL_LISENSI: Record<LisensiFoto, string> = {
+  "Unsplash License": "https://unsplash.com/license",
+  "Pexels License": "https://www.pexels.com/license/",
+  CC0: "https://creativecommons.org/publicdomain/zero/1.0/deed.id",
+  "CC BY 3.0": "https://creativecommons.org/licenses/by/3.0/deed.id",
+  "CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/deed.id",
+  "CC BY-SA 3.0": "https://creativecommons.org/licenses/by-sa/3.0/deed.id",
+  "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/deed.id",
+};
+
+/** Lisensi yang mewajibkan atribusi lengkap (judul, pembuat, lisensi, sumber, perubahan). */
+export function wajibAtribusi(lisensi: LisensiFoto): boolean {
+  return lisensi.startsWith("CC BY");
 }
 
 export const kreditFoto: KreditFoto[] = [
@@ -40,6 +60,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "dipotong dan diubah ukurannya",
   },
   {
     slot: "kegiatan-kelas",
@@ -49,24 +70,29 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "kegiatan-kelas",
     file: "stok/kegiatan-kelas-2.jpg",
+    judul: "Literasi Siswa SMP Negeri Satap Oebelo Kab.TTS",
     sumber: "https://commons.wikimedia.org/wiki/File:Literasi_Siswa_SMP_Negeri_Satap_Oebelo_Kab.TTS.jpg",
     fotografer: "Dianadola",
     lisensi: "CC BY-SA 4.0",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "kegiatan-kelas",
     file: "stok/kegiatan-kelas-3.jpg",
+    judul: "Student at SMP Negeri 2 Kotabaru",
     sumber: "https://commons.wikimedia.org/wiki/File:Student_at_SMP_Negeri_2_Kotabaru.jpg",
     fotografer: "RusdianaDablang",
     lisensi: "CC BY-SA 4.0",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "ekskul",
@@ -76,6 +102,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "ekskul",
@@ -85,6 +112,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "ekskul",
@@ -94,6 +122,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "ekskul",
@@ -103,6 +132,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "fasilitas",
@@ -112,6 +142,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "fasilitas",
@@ -121,6 +152,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "fasilitas",
@@ -130,6 +162,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "fasilitas",
@@ -139,6 +172,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "fasilitas",
@@ -148,6 +182,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "galeri",
@@ -157,6 +192,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "galeri",
@@ -166,6 +202,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "galeri",
@@ -175,6 +212,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "galeri",
@@ -184,6 +222,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "galeri",
@@ -193,6 +232,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "galeri",
@@ -202,15 +242,18 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "galeri",
     file: "stok/galeri-7.jpg",
+    judul: "Siswa siswi yang sedang menonton clasmeet",
     sumber: "https://commons.wikimedia.org/wiki/File:Siswa_siswi_yang_sedang_menonton_clasmeet.jpg",
     fotografer: "Dafayz",
     lisensi: "CC0",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "galeri",
@@ -220,6 +263,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "galeri",
@@ -229,6 +273,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "berita",
@@ -238,6 +283,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "berita",
@@ -247,6 +293,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "berita",
@@ -256,6 +303,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "berita",
@@ -265,6 +313,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "berita",
@@ -274,6 +323,7 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Unsplash License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
   {
     slot: "berita",
@@ -283,5 +333,6 @@ export const kreditFoto: KreditFoto[] = [
     lisensi: "Pexels License",
     tanggalUnduh: "2026-09-28",
     stok: true,
+    perubahan: "diubah ukurannya",
   },
 ];
