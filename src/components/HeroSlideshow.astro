@@ -131,9 +131,10 @@ const jumlahKata = judul.length + subjudul.length;
         </span>
       </h1>
       <p class="hero-kata teks-lebar mt-6 text-biru-50" style={`--i: ${jumlahKata}`}>{sekolah.hero.teks}</p>
-      <div class="hero-kata mt-8 flex flex-wrap gap-3" style={`--i: ${jumlahKata + 1}`}>
-        <Button href="/pendaftaran/" diLatarGelap>Daftar sekarang</Button>
-        <Button href="/profil/" varian="secondary" diLatarGelap>Kenali sekolah kami</Button>
+      <!-- Dua tombol sejajar mulai 360px; di layar lebih sempit tombol turun utuh ke baris baru -->
+      <div class="hero-kata mt-8 flex flex-wrap gap-2 sm:gap-3" style={`--i: ${jumlahKata + 1}`}>
+        <Button href="/pendaftaran/" diLatarGelap ringkasDiMobile>Daftar sekarang</Button>
+        <Button href="/profil/" varian="secondary" diLatarGelap ringkasDiMobile>Kenali sekolah kami</Button>
       </div>
     </div>
   </div>

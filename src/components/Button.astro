@@ -15,6 +15,8 @@ interface Props extends Omit<HTMLAttributes<"a"> & HTMLAttributes<"button">, "cl
   panah?: boolean;
   /** Tombol di atas latar gelap (biru-800/950) */
   diLatarGelap?: boolean;
+  /** Lebih ringkas di bawah `sm` (padding & teks lebih kecil) agar dua tombol muat sejajar di layar 360px */
+  ringkasDiMobile?: boolean;
   class?: string;
 }
 
@@ -23,6 +25,7 @@ const {
   href,
   panah = varian === "primary",
   diLatarGelap = false,
+  ringkasDiMobile = false,
   class: kelas,
   type = "button",
   ...rest
@@ -39,7 +42,8 @@ const gaya: Record<Varian, string> = {
 };
 
 const kelasTombol = [
-  "efek-angkat inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold",
+  "efek-angkat inline-flex min-h-12 items-center justify-center rounded-full py-3 font-semibold",
+  ringkasDiMobile ? "gap-2 px-3 text-sm whitespace-nowrap sm:px-6 sm:text-base" : "gap-2 px-6",
   "transition-colors",
   gaya[varian],
   kelas,
@@ -50,12 +54,12 @@ const kelasTombol = [
   href ? (
     <a href={href} class:list={kelasTombol} {...rest}>
       <slot />
-      {panah && <ArrowRight size={20} stroke-width={1.75} class="panah-geser shrink-0" />}
+      {panah && <ArrowRight size={20} stroke-width={1.75} class:list={["panah-geser shrink-0", ringkasDiMobile && "hidden sm:block"]} />}
     </a>
   ) : (
     <button type={type} class:list={kelasTombol} {...rest}>
       <slot />
-      {panah && <ArrowRight size={20} stroke-width={1.75} class="panah-geser shrink-0" />}
+      {panah && <ArrowRight size={20} stroke-width={1.75} class:list={["panah-geser shrink-0", ringkasDiMobile && "hidden sm:block"]} />}
     </button>
   )
 }
