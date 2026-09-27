@@ -49,7 +49,8 @@ Bangun /profil (A6), /guru-dan-staf (A3), /ekstrakurikuler, /fasilitas (A8), /ga
 ## Fase 6 — Berita
 ```
 Buat content collection berita + 6 artikel dummy sesuai CONTENT.md §4, halaman /berita (pagination)
-dan /berita/[slug] (progress bar baca, berita terkait). Transisi halaman A11 + cleanup ScrollTrigger. Commit.
+dan /berita/[slug] (progress bar baca, berita terkait). Transisi halaman A11 + cleanup ScrollTrigger.
+WAJIB: tambahkan section "Berita terbaru" (3 artikel) di beranda (PRD §5; KEPUTUSAN #59, #63). Commit.
 ```
 
 ## Fase 7 — Audit

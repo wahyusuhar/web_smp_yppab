@@ -102,3 +102,11 @@ ditandai dengan rujukannya, supaya dokumen utama tetap jadi sumber kebenaran.
 | 58 | Kontras hero | Diukur dari piksel foto di bawah area teks (persentil 99 piksel paling terang) pada ketiga foto di 1280px dan 360px: rasio 7,3:1–10,3:1 (AA ≥ 4,5:1). Overlay mobile minimal 0,72 di seluruh lebar. |
 | 59 | Berita terbaru di beranda | Section "Berita terbaru" (PRD §5) ditambahkan di Fase 6 bersama content collection berita; saat ini belum ada sumber data berita. |
 | 60 | Lingkungan uji | Preview produksi dijalankan di port 4400 karena port 4321 dipakai server dev pengguna. Uji Fase 3 diulang terhadap build produksi (26/26 lulus). |
+
+## Revisi setelah review Fase 4 — 2026-09-28
+
+| # | Topik | Keputusan |
+|---|---|---|
+| 61 | Placeholder foto di produksi (memperluas #51) | Satu aturan di `Foto`: placeholder SVG tidak dirender di produksi (prop `opsional` dihapus). `Card` dengan prop `foto` beralih otomatis ke varian tanpa foto (ikon Lucide dari field `ikon` di `sekolah.ts` + latar biru-50) — dipakai kartu ekskul & fasilitas. Item galeri placeholder dilewati sehingga grid rapat. Dev tetap menampilkan placeholder. Terverifikasi: 0 placeholder SVG di seluruh HTML produksi. |
+| 62 | Tombol hero di mobile | Button `ringkasDiMobile`: di bawah `sm` `px-3`, `text-sm`, tanpa panah, `whitespace-nowrap`. Kedua tombol hero sejajar & satu baris mulai 360px (diuji 360/375/393/412/768px); di bawah 360px tombol turun utuh ke baris baru, teks tidak terlipat. |
+| 63 | Berita terbaru di beranda (menegaskan #59) | WAJIB ditambahkan di Fase 6 bersama content collection berita (dicatat juga di PROMPT-AWAL.md Fase 6). |
