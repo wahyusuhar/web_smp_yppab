@@ -57,6 +57,26 @@ ditandai dengan rujukannya, supaya dokumen utama tetap jadi sumber kebenaran.
 | 33 | Slot gedung | Sengaja placeholder: foto gedung sekolah lain akan dibaca sebagai gedung sekolah ini (halaman Profil & gambar OG). Lihat ASSETS-TODO.md. |
 | 34 | Hero | ~~Crop lewat `object-position`.~~ Direvisi di #37. |
 | 35 | Penomoran galeri | Foto galeri yang lolos diberi nomor 1–9; slot 10–12 placeholder. |
-| 37 | Hero dipotong permanen (merevisi #34) | File sumber Pexels 12719300 (7655×5106) dipotong ke area x 0–3650, y 1276–4850 (3650×3574) sehingga dua siswi berseragam SD tidak ada di file sama sekali, lalu diperkecil ke 2400×2350. Posisi yang disarankan untuk `object-fit: cover`: 16:9 → `object-position: 50% 15%`, 4:5 → `75% 50%` (kedua siswa utuh). |
-| 38 | Label "Foto ilustrasi" | Semua foto stok yang tampil diberi label kecil "Foto ilustrasi" (pojok kiri bawah, latar `biru-950` transparan, teks putih), di dev dan produksi. Data dari `stok: true` di `kredit.ts`; dipasang oleh komponen `Foto` lewat `cariFoto()` di `src/lib/foto.ts`. `kredit.file` kini path relatif terhadap `src/assets/images/` (mis. `stok/hero-1.jpg`) agar foto asli di `images/sekolah/` bisa dikenali. Halaman galeri menampilkan kalimat pemberitahuan selama `adaFotoStok("galeri")`. | DESIGN §4–5, PRD §5 |
 | 36 | Tipe lisensi | `LisensiFoto` di `kredit.ts` menulis lisensi CC lengkap dengan versi (mis. "CC BY-SA 4.0") karena wajib untuk atribusi. |
+
+## Revisi setelah review Fase 2 — 2026-09-28
+
+| # | Topik | Keputusan |
+|---|---|---|
+| 37 | Hero dipotong permanen (merevisi #34) | File sumber Pexels 12719300 (7655×5106) dipotong ke area x 0–3650, y 1276–4850 (3650×3574) sehingga dua siswi berseragam SD tidak ada di file sama sekali, lalu diperkecil ke 2400×2350. Posisi yang disarankan untuk `object-fit: cover`: 16:9 → `object-position: 50% 15%`, 4:5 → `75% 50%` (kedua siswa utuh). |
+| 38 | Label "Foto ilustrasi" | Semua foto stok yang tampil diberi label kecil "Foto ilustrasi" (pojok kiri bawah, latar `biru-950` transparan, teks putih), di dev dan produksi. Data dari `stok: true` di `kredit.ts`; dipasang oleh komponen `Foto` lewat `cariFoto()` di `src/lib/foto.ts`. `kredit.file` kini path relatif terhadap `src/assets/images/` (mis. `stok/hero-1.jpg`) agar foto asli di `images/sekolah/` bisa dikenali. Halaman galeri menampilkan kalimat pemberitahuan selama `adaFotoStok("galeri")`. Diterapkan di DESIGN §4–5 dan PRD §5. |
+| 39 | Atribusi /kredit-foto | `kredit.ts` mendapat field `judul` (wajib untuk CC) dan `perubahan` (`"diubah ukurannya"` / `"dipotong dan diubah ukurannya"` / `null`), serta `URL_LISENSI` dan `wajibAtribusi()`. Foto CC BY / CC BY-SA tampil sebagai daftar atribusi lengkap (judul bertaut ke sumber, pembuat, lisensi bertaut, perubahan); foto lain dalam tabel. Semua foto diperkecil; hanya hero yang juga dipotong. |
+
+## Fase 3 — Layout & komponen — 2026-09-28
+
+| # | Topik | Keputusan |
+|---|---|---|
+| 40 | Menu desktop | Menu lengkap (8 tautan + tombol Daftar) tampil mulai `xl` (≥1280px) dan muat tanpa dropdown (diuji: tanpa luapan di 1280px). Di bawah `xl` memakai drawer. Dropdown "Sekolah" tidak diperlukan. Tombol "Daftar" di header tampil mulai `sm` (≥640px); di bawahnya ada di dalam drawer. |
+| 41 | Drawer (A16) | Memakai `<dialog>` + `showModal()` (sisa halaman inert, Esc bawaan), ditambah kunci Tab manual dan fokus kembali ke tombol Menu. Animasi lewat `@starting-style` (transform + opacity). Tanpa JS, tombol Menu diganti tautan ke `#tautan-cepat` di footer (varian Tailwind `js:`, class `js` dipasang di `<html>`). |
+| 42 | Bayangan hover (A10, A9) | `box-shadow` tidak dianimasikan; bayangan ada di pseudo-element dan hanya opacity-nya yang berubah (utility `efek-angkat`). |
+| 43 | robots.txt | Dibangkitkan lewat endpoint `src/pages/robots.txt.ts` agar URL sitemap mengikuti `PUBLIC_SITE_URL`. Halaman noindex TIDAK di-Disallow supaya Google bisa membaca noindex-nya. |
+| 44 | Favicon & gambar OG | `scripts/buat-ikon.mjs` (sharp dari Astro) membuat favicon (monogram teks "SY"), ikon manifest, `site.webmanifest`, dan `public/og/og-default.png` (gradien biru→biru, garis "dasi", teks "SMPS YPPAB"). Hanya teks, bukan lambang; ganti saat ada logo resmi. |
+| 45 | Media sosial | Lucide tidak menyediakan ikon merek, jadi tautan sosial berupa teks ("Instagram SMPS YPPAB"). Section kontak/sosial di footer disembunyikan utuh di produksi bila semua datanya placeholder (tidak ada judul tanpa isi). |
+| 46 | Lightbox (A12) | `<dialog>` + animasi FLIP (Web Animations API, transform saja, 350ms), navigasi panah kiri/kanan, fokus kembali ke thumbnail. Label "Foto ilustrasi" ikut tampil di gambar besar bila thumbnail-nya foto stok. Tanpa JS tautan membuka gambar besar langsung. |
+| 47 | Komponen `Foto` | Rasio (`aspect-ratio`) dipasang di `<figure>` dengan `self-start`, gambar `object-cover`; label menempel di pojok gambar pada grid apa pun. |
+| 48 | Uji keyboard | Diuji otomatis dengan Chrome headless (puppeteer-core di luar proyek, tidak menambah dependensi): 26/26 lulus — urutan Tab, fokus terlihat di header/drawer/footer, drawer dibuka Enter, fokus terkunci (Tab & Shift+Tab), Esc menutup & fokus kembali, tanpa luapan di 360/768/1280px, A9 aktif setelah gulir. |

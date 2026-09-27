@@ -1,0 +1,154 @@
+---
+/**
+ * Katalog komponen untuk pengecekan visual (PROMPT-AWAL Fase 3).
+ * noindex + dikeluarkan dari sitemap (astro.config.mjs). Tidak ditaut dari menu.
+ * Semua data berasal dari sekolah.ts / kredit.ts — tidak ada angka atau fakta contoh yang dikarang di sini.
+ */
+import { getImage } from "astro:assets";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Button from "../../components/Button.astro";
+import Badge from "../../components/Badge.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Card from "../../components/Card.astro";
+import StatCounter from "../../components/StatCounter.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import Timeline from "../../components/Timeline.astro";
+import StepList from "../../components/StepList.astro";
+import Lightbox from "../../components/Lightbox.astro";
+import Foto from "../../components/Foto.astro";
+import Isian from "../../components/Isian.astro";
+import Logo from "../../components/Logo.astro";
+import { sekolah } from "../../data/sekolah";
+import { cariFoto } from "../../lib/foto";
+
+const galeriDemo = ["stok/galeri-1", "stok/galeri-2", "stok/galeri-7"];
+const tautanBesar = await Promise.all(
+  galeriDemo.map(async (src) => {
+    const f = cariFoto(src);
+    if (f.jenis !== "gambar") return "";
+    return (await getImage({ src: f.gambar, width: 1600, format: "webp" })).src;
+  }),
+);
+const altGaleri = [
+  "Ilustrasi: empat siswa berseragam sekolah belajar bersama di lapangan rumput",
+  "Ilustrasi: anak berseragam Pramuka berlari di selasar sekolah",
+  "Ilustrasi: siswa SMP berseragam biru duduk menonton class meeting",
+];
+
+const stat = sekolah.statistik;
+---
+
+<BaseLayout
+  judul="Katalog Komponen – SMPS YPPAB"
+  deskripsi="Halaman internal pengembangan untuk memeriksa tampilan komponen website SMPS YPPAB. Tidak untuk pengunjung dan tidak diindeks mesin pencari."
+  breadcrumb={[{ label: "Katalog Komponen", href: "/dev/komponen/" }]}
+  noindex
+>
+  <div class="container-situs flex flex-col gap-20 pt-8 pb-20 lg:pb-32">
+    <SectionHeading level="h1" eyebrow="Internal" judul="Katalog komponen" deskripsi="Semua komponen inti dari DESIGN.md §4. Data diambil dari sekolah.ts dan kredit.ts." />
+
+    <section aria-labelledby="k-tombol" class="flex flex-col gap-6">
+      <h2 id="k-tombol" class="text-h3">Button</h2>
+      <div class="flex flex-wrap gap-4">
+        <Button href="/pendaftaran/">Primary</Button>
+        <Button href="/kontak/" varian="secondary">Secondary outline</Button>
+        <Button varian="ghost">Ghost (button)</Button>
+      </div>
+      <div class="latar-gelap flex flex-wrap gap-4 rounded-kartu bg-biru-800 p-6">
+        <Button href="/pendaftaran/" diLatarGelap>Primary di latar gelap</Button>
+        <Button href="/kontak/" varian="secondary" diLatarGelap>Secondary di latar gelap</Button>
+      </div>
+    </section>
+
+    <section aria-labelledby="k-badge" class="flex flex-col gap-6">
+      <h2 id="k-badge" class="text-h3">Badge</h2>
+      <div class="flex flex-wrap gap-3">
+        <Badge>Biru</Badge>
+        <Badge varian="kuning">Pendaftaran Dibuka</Badge>
+        <Badge varian="contoh" />
+      </div>
+    </section>
+
+    <section aria-labelledby="k-heading" class="flex flex-col gap-6">
+      <h2 id="k-heading" class="text-h3">SectionHeading</h2>
+      <SectionHeading eyebrow="Eyebrow" judul="Judul section (h2)" deskripsi={sekolah.ringkasan.teks} />
+      <SectionHeading eyebrow="Rata tengah" judul="Judul section rata tengah" rata="tengah" />
+    </section>
+
+    <section aria-labelledby="k-kartu" class="flex flex-col gap-6">
+      <h2 id="k-kartu" class="text-h3">Card</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        {
+          sekolah.fasilitas.slice(0, 2).map((f) => (
+            <Card judul={f.nama} dummy={f.dummy}>
+              <Foto slot="media" src={`stok/${f.gambar}`} alt={`Ilustrasi: ${f.nama.toLowerCase()}`} rasio="4/3" sizes="(min-width: 768px) 33vw, 100vw" />
+              {f.deskripsi}
+            </Card>
+          ))
+        }
+        <Card judul="Kartu bertaut (seluruh kartu dapat diklik)" href="/ekstrakurikuler/">
+          Fokus keyboard menampilkan garis tepi pada seluruh kartu.
+        </Card>
+      </div>
+    </section>
+
+    <section aria-labelledby="k-foto" class="flex flex-col gap-6">
+      <h2 id="k-foto" class="text-h3">Foto (label otomatis dari kredit.ts)</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        <Foto src="stok/hero-1" alt="Ilustrasi: dua siswa SMP berseragam putih-biru membaca bersama" rasio="16/9" posisi="50% 15%" sizes="(min-width: 768px) 33vw, 100vw" class="rounded-gambar" />
+        <Foto src="stok/hero-1" alt="Ilustrasi: dua siswa SMP berseragam putih-biru membaca bersama (rasio 4:5)" rasio="4/5" posisi="75% 50%" sizes="(min-width: 768px) 33vw, 100vw" class="rounded-gambar" />
+        <Foto src="stok/fasilitas-4" alt="Placeholder foto laboratorium komputer" rasio="16/9" class="rounded-gambar" />
+      </div>
+    </section>
+
+    <section aria-labelledby="k-stat" class="flex flex-col gap-6">
+      <h2 id="k-stat" class="text-h3">StatCounter (nilai dari sekolah.statistik)</h2>
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCounter nilai={stat.siswa} label="Siswa" />
+        <StatCounter nilai={stat.guru} label="Guru" />
+        <StatCounter nilai={stat.rombel} label="Rombel" />
+        <StatCounter nilai={stat.ekstrakurikuler} label="Ekstrakurikuler" />
+      </div>
+    </section>
+
+    <section aria-labelledby="k-breadcrumb" class="flex flex-col gap-6">
+      <h2 id="k-breadcrumb" class="text-h3">Breadcrumb</h2>
+      <Breadcrumb item={[{ label: "Beranda", href: "/" }, { label: "Berita", href: "/berita/" }, { label: "Judul artikel", href: "/berita/contoh/" }]} />
+    </section>
+
+    <section aria-labelledby="k-timeline" class="flex flex-col gap-6">
+      <h2 id="k-timeline" class="text-h3">Timeline (sekolah.sejarah)</h2>
+      <Timeline item={sekolah.sejarah} />
+    </section>
+
+    <section aria-labelledby="k-step" class="flex flex-col gap-6">
+      <h2 id="k-step" class="text-h3">StepList (pendaftaran.alur)</h2>
+      <StepList item={sekolah.pendaftaran.alur.langkah} />
+    </section>
+
+    <section aria-labelledby="k-lightbox" class="flex flex-col gap-6">
+      <h2 id="k-lightbox" class="text-h3">Lightbox</h2>
+      <ul class="grid gap-4 sm:grid-cols-3">
+        {
+          galeriDemo.map((src, i) => (
+            <li>
+              <a href={tautanBesar[i]} data-lightbox="demo" class="block rounded-gambar">
+                <Foto src={src} alt={altGaleri[i] ?? ""} rasio="1/1" sizes="(min-width: 640px) 33vw, 100vw" class="rounded-gambar" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <Lightbox />
+    </section>
+
+    <section aria-labelledby="k-lain" class="flex flex-col gap-6">
+      <h2 id="k-lain" class="text-h3">Logo & Isian</h2>
+      <div class="flex flex-wrap items-center gap-6">
+        <Logo />
+        <span class="rounded-kartu bg-biru-950 p-4"><Logo varian="gelap" /></span>
+        <span>NPSN: <Isian nilai={sekolah.npsn} /></span>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
