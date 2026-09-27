@@ -77,11 +77,19 @@ const stat = sekolah.statistik;
 
     <section aria-labelledby="k-kartu" class="flex flex-col gap-6">
       <h2 id="k-kartu" class="text-h3">Card</h2>
+      <p class="teks-lebar text-sm">
+        Kartu kedua (Laboratorium Komputer) fotonya masih placeholder: di dev placeholder tampil, di produksi kartu berganti
+        ke varian tanpa foto (ikon + latar biru-50).
+      </p>
       <div class="grid gap-6 md:grid-cols-3">
         {
-          sekolah.fasilitas.slice(0, 2).map((f) => (
-            <Card judul={f.nama} dummy={f.dummy}>
-              <Foto slot="media" src={`stok/${f.gambar}`} alt={`Ilustrasi: ${f.nama.toLowerCase()}`} rasio="4/3" sizes="(min-width: 768px) 33vw, 100vw" />
+          sekolah.fasilitas.slice(2, 4).map((f) => (
+            <Card
+              judul={f.nama}
+              dummy={f.dummy}
+              ikon={f.ikon}
+              foto={{ src: `stok/${f.gambar}`, alt: `Ilustrasi: ${f.nama.toLowerCase()}` }}
+            >
               {f.deskripsi}
             </Card>
           ))

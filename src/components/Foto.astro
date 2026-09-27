@@ -2,7 +2,7 @@
 /**
  * Gambar konten (hero, galeri, kegiatan, ekskul, fasilitas, berita).
  * - Foto stok (kredit.ts `stok: true`) → label "Foto ilustrasi" di pojok kiri bawah (DESIGN.md §5).
- * - Placeholder SVG (slot belum berfoto) → dirender apa adanya, tanpa label.
+ * - Placeholder SVG (slot belum berfoto) → dev: dirender tanpa label; produksi: tidak dirender sama sekali.
  * Alt foto stok wajib jujur, diawali "Ilustrasi: ..." (ASSETS.md §4).
  */
 import { Picture } from "astro:assets";
@@ -22,16 +22,13 @@ interface Props {
   prioritas?: boolean;
   /** Kelas tambahan untuk pembungkus (radius, lebar, dsb.) */
   class?: string;
-  /**
-   * Foto opsional (mis. gedung): selama masih placeholder, TIDAK dirender di produksi (CONTENT.md §6).
-   * Halaman menyesuaikan layout dengan `modeFoto()`.
-   */
-  opsional?: boolean;
 }
 
-const { src, alt, sizes = "100vw", rasio, posisi, prioritas = false, class: kelas, opsional = false } = Astro.props;
+const { src, alt, sizes = "100vw", rasio, posisi, prioritas = false, class: kelas } = Astro.props;
 const foto = cariFoto(src);
-const disembunyikan = opsional && modeFoto(src) === "sembunyi";
+// SATU aturan untuk semua slot (CONTENT.md §6): placeholder SVG tidak dirender di produksi, tetap tampil di dev.
+// Pembungkus (kartu, grid) menyesuaikan lewat modeFoto(): Card → varian tanpa foto, galeri → item dilewati.
+const disembunyikan = modeFoto(src) === "sembunyi";
 
 const LEBAR = [480, 800, 1200, 1600, 2000, 2400];
 const lebar =

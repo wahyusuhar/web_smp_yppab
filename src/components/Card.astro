@@ -2,8 +2,15 @@
 /**
  * Satu-satunya gaya kartu (DESIGN.md §4). Dengan `href`, seluruh kartu menjadi tautan (judul = teks tautan).
  * `dummy` menampilkan badge "Contoh" (CONTENT.md §4).
+ *
+ * Foto kartu lewat prop `foto`. Bila fotonya masih placeholder di produksi, kartu otomatis memakai
+ * VARIAN TANPA FOTO (DESIGN.md §4): ikon Lucide dari prop `ikon` di atas latar biru-50 — kartu tidak hilang.
+ * Slot `media` tetap tersedia untuk isi media lain (mis. ikon keunggulan).
  */
+import { icons } from "@lucide/astro";
 import Badge from "./Badge.astro";
+import Foto from "./Foto.astro";
+import { modeFoto } from "../lib/foto";
 
 interface Props {
   judul: string;
@@ -11,22 +18,41 @@ interface Props {
   dummy?: boolean;
   /** Tingkat heading judul kartu; h3 di dalam section ber-h2 */
   level?: "h2" | "h3";
+  foto?: { src: string; alt: string; rasio?: string; sizes?: string; posisi?: string };
+  /** Nama ikon Lucide (PascalCase) untuk varian tanpa foto, mis. "Monitor" */
+  ikon?: string;
   class?: string;
 }
 
-const { judul, href, dummy = false, level = "h3", class: kelas } = Astro.props;
+const { judul, href, dummy = false, level = "h3", foto, ikon, class: kelas } = Astro.props;
 const Heading = level;
+const tanpaFoto = foto !== undefined && modeFoto(foto.src) === "sembunyi";
+const Ikon = ikon ? icons[ikon as keyof typeof icons] : undefined;
 ---
 
 <article
   class:list={[
-    "efek-angkat flex h-full flex-col overflow-hidden rounded-kartu border border-abu-300 bg-putih",
+    "efek-angkat flex h-full flex-col overflow-hidden rounded-kartu border",
+    tanpaFoto ? "border-biru-100 bg-biru-50" : "border-abu-300 bg-putih",
     href &&
       "has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-3 has-[a:focus-visible]:outline-biru-600",
     kelas,
   ]}
   data-kartu
+  data-kartu-tanpa-foto={tanpaFoto ? "" : undefined}
 >
+  {
+    foto && !tanpaFoto && (
+      <Foto
+        src={foto.src}
+        alt={foto.alt}
+        rasio={foto.rasio ?? "4/3"}
+        posisi={foto.posisi}
+        sizes={foto.sizes ?? "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
+      />
+    )
+  }
+  {tanpaFoto && Ikon && <Ikon size={40} stroke-width={1.75} class="mx-6 mt-6 text-biru-600" />}
   {Astro.slots.has("media") && <slot name="media" />}
   <div class="flex flex-1 flex-col gap-3 p-6">
     {dummy && <Badge varian="contoh" class="self-start" />}

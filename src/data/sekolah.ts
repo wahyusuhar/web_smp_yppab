@@ -63,6 +63,8 @@ export interface PeristiwaSejarah {
 
 export interface Ekstrakurikuler {
   nama: string;
+  /** Ikon Lucide untuk kartu tanpa foto (DESIGN §4) */
+  ikon: string;
   jadwal: Isian;
   deskripsi: string;
   /** Slot foto dari docs/ASSETS.md §5, mis. "ekskul-1" */
@@ -72,6 +74,8 @@ export interface Ekstrakurikuler {
 
 export interface Fasilitas {
   nama: string;
+  /** Ikon Lucide untuk kartu tanpa foto (DESIGN §4) */
+  ikon: string;
   deskripsi: string;
   /** Slot foto dari docs/ASSETS.md §5, mis. "fasilitas-1" */
   gambar: string;
@@ -271,6 +275,7 @@ export const sekolah: DataSekolah = {
   ekstrakurikuler: [
     {
       nama: "Pramuka",
+      ikon: "Tent",
       jadwal: "[ISI: hari dan jam]",
       deskripsi: "Ekskul wajib kelas 7. Latihan tali-temali, baris-berbaris, dan kemah akhir semester.",
       gambar: "ekskul-1",
@@ -278,6 +283,7 @@ export const sekolah: DataSekolah = {
     },
     {
       nama: "Futsal",
+      ikon: "Goal",
       jadwal: "[ISI: hari dan jam]",
       deskripsi: "Latihan teknik dasar dan kerja sama tim, dilanjutkan pertandingan persahabatan antarkelas.",
       gambar: "ekskul-2",
@@ -285,6 +291,7 @@ export const sekolah: DataSekolah = {
     },
     {
       nama: "Paskibra",
+      ikon: "Flag",
       jadwal: "[ISI: hari dan jam]",
       deskripsi: "Melatih baris-berbaris dan kedisiplinan. Anggota bertugas pada upacara bendera sekolah.",
       gambar: "ekskul-3",
@@ -292,6 +299,7 @@ export const sekolah: DataSekolah = {
     },
     {
       nama: "Tari Tradisional",
+      ikon: "Music",
       jadwal: "[ISI: hari dan jam]",
       deskripsi: "Mempelajari tari daerah Melayu Jambi untuk tampil di acara sekolah dan peringatan hari besar.",
       gambar: "ekskul-4",
@@ -299,6 +307,7 @@ export const sekolah: DataSekolah = {
     },
     {
       nama: "PMR",
+      ikon: "HeartPulse",
       jadwal: "[ISI: hari dan jam]",
       deskripsi: "Belajar pertolongan pertama dan membantu petugas UKS saat upacara atau kegiatan olahraga.",
       gambar: "ekskul-5",
@@ -306,6 +315,7 @@ export const sekolah: DataSekolah = {
     },
     {
       nama: "English Club",
+      ikon: "Languages",
       jadwal: "[ISI: hari dan jam]",
       deskripsi: "Latihan percakapan bahasa Inggris lewat permainan, drama pendek, dan presentasi kelompok.",
       gambar: "ekskul-6",
@@ -316,36 +326,42 @@ export const sekolah: DataSekolah = {
   fasilitas: [
     {
       nama: "Ruang Kelas",
+      ikon: "School",
       deskripsi: "Ruang belajar dengan meja siswa, papan tulis, dan ventilasi yang cukup untuk kegiatan harian.",
       gambar: "fasilitas-1",
       dummy: true,
     },
     {
       nama: "Laboratorium IPA",
+      ikon: "FlaskConical",
       deskripsi: "Tempat praktikum IPA sederhana seperti pengamatan mikroskop dan percobaan listrik dasar.",
       gambar: "fasilitas-2",
       dummy: true,
     },
     {
       nama: "Perpustakaan",
+      ikon: "BookOpen",
       deskripsi: "Koleksi buku pelajaran dan bacaan umum. Siswa bisa meminjam buku pada jam istirahat.",
       gambar: "fasilitas-3",
       dummy: true,
     },
     {
       nama: "Laboratorium Komputer",
+      ikon: "Monitor",
       deskripsi: "Dipakai untuk pelajaran informatika dan latihan sebelum ANBK.",
       gambar: "fasilitas-4",
       dummy: true,
     },
     {
       nama: "Lapangan Olahraga",
+      ikon: "LandPlot",
       deskripsi: "Lapangan untuk upacara bendera, pelajaran PJOK, dan latihan ekstrakurikuler.",
       gambar: "fasilitas-5",
       dummy: true,
     },
     {
       nama: "UKS",
+      ikon: "Stethoscope",
       deskripsi: "Ruang kesehatan untuk pertolongan pertama bagi siswa yang sakit saat jam sekolah.",
       gambar: "fasilitas-6",
       dummy: true,

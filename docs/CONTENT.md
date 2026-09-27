@@ -79,7 +79,10 @@ section statistik) mengikuti pola yang sama: **dev → kotak placeholder, produk
 Maps memakai `koordinat`, atau alamat lengkap bila koordinat masih `null`.
 Title beranda menghilangkan kota selama `alamat.kabupatenKota` placeholder (lihat SEO.md §2).
 
-**Foto gedung** (`stok/gedung-1`): selama masih placeholder SVG, di build produksi bingkai foto gedung TIDAK dirender dan
-layout di sekitarnya menyesuaikan (tidak ada ruang kosong); di dev placeholder tetap tampil. Komponen `Foto` dengan prop
-`opsional` + helper `modeFoto()` (src/lib/foto.ts) — halaman memakai `modeFoto()` untuk memilih layout.
+**Semua slot foto placeholder** (gedung, ekskul PMR/English Club, lab komputer, galeri 10–12, dan slot lain yang kelak
+kosong): satu aturan di komponen `Foto` — placeholder SVG TIDAK dirender di build produksi; di dev tetap tampil.
+Pembungkusnya menyesuaikan lewat helper `modeFoto()` (src/lib/foto.ts), tanpa ruang kosong:
+- foto lepas (mis. gedung di profil/beranda) → layout memakai satu foto saja;
+- kartu (`Card` dengan prop `foto`) → varian kartu tanpa foto (ikon + latar biru-50, DESIGN §4), kartu tetap tampil;
+- item galeri → tidak dirender, grid menyesuaikan.
 Gambar OG memakai versi teks (`public/og/og-default.png`) sampai foto gedung asli ada.

@@ -47,6 +47,14 @@ Aturan:
 `Foto` (semua gambar konten; memasang label "Foto ilustrasi" otomatis, lihat §5).
 Tidak boleh ada tombol/kartu yang di-styling di luar komponen ini.
 
+**Varian kartu tanpa foto** (`Card` dengan prop `foto` + `ikon`): bila foto kartu masih placeholder, di build produksi
+kartu tetap tampil tanpa area foto — ikon Lucide yang relevan (40px, stroke 1.75, `biru-600`) di atas latar `biru-50`
+dengan border `biru-100`. Di dev placeholder SVG tetap tampil. Dipakai untuk kartu ekskul dan fasilitas; ikon diambil
+dari field `ikon` di `sekolah.ts`. Pergantian terjadi otomatis di `Card`, tidak diatur per halaman.
+
+**Button ringkas di mobile** (`ringkasDiMobile`): di bawah `sm` padding `px-3`, teks `text-sm`, tanpa ikon panah, teks
+tidak terlipat — dipakai bila dua tombol harus sejajar di layar 360px (hero beranda).
+
 ## 5. Elemen visual khas (pembeda dari template)
 - **Garis "dasi"**: garis diagonal tipis biru-400 sebagai dekorasi section (terinspirasi dasi seragam SMP). Dipakai konsisten, bukan acak.
 - **Gelombang SVG** pemisah section hero → konten, beranimasi pelan: pola gelombang berulang (tileable) digeser `translateX`, 8–12 dtk loop. Bukan path morph; plugin MorphSVG tidak dipakai.
