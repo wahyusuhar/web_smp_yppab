@@ -3,6 +3,14 @@
 import "../styles/global.css";
 import Isian from "../components/Isian.astro";
 import { sekolah } from "../data/sekolah";
+import { saringBaris } from "../lib/isian";
+
+const identitas = saringBaris([
+  { label: "Status", nilai: sekolah.status },
+  { label: "NPSN", nilai: sekolah.npsn },
+  { label: "Akreditasi", nilai: sekolah.akreditasi },
+  { label: "Provinsi", nilai: sekolah.alamat.provinsi },
+]);
 ---
 
 <html lang="id">
@@ -17,7 +25,18 @@ import { sekolah } from "../data/sekolah";
       <p class="text-eyebrow uppercase text-biru-600">Sedang dibangun</p>
       <h1 class="text-display">{sekolah.nama}</h1>
       <p class="teks-lebar mt-6">{sekolah.ringkasan.teks}</p>
-      <p class="mt-4">NPSN: <Isian nilai={sekolah.npsn} /></p>
+      <dl class="mt-6">
+        {
+          identitas.map((b) => (
+            <div class="flex gap-4">
+              <dt class="font-semibold">{b.label}</dt>
+              <dd>
+                <Isian nilai={b.nilai} />
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
     </main>
   </body>
 </html>

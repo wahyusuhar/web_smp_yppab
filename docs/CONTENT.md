@@ -45,7 +45,12 @@ export const sekolah = {
   pendaftaran: { dibuka: false, gelombang: [], syarat: [], alur: [], biaya: "[ISI]", faq: [] },
 } as const;
 ```
-Helper wajib: `isIsi(v)` (true jika placeholder), `tampil(v)` (render placeholder sebagai teks abu-abu bergaris putus-putus di mode dev, dan "–" di build produksi).
+Helper wajib (`src/lib/isian.ts`):
+- `isIsi(v)` — true jika placeholder (`"[ISI: ...]"`, `null`, `undefined`).
+- `tampil(v)` + komponen `<Isian>` — nilai tunggal di dalam kalimat: placeholder bergaris putus-putus di dev, "–" di produksi.
+- `saringBaris(baris)` — baris berlabel (tabel identitas, daftar kontak, jadwal): di dev semua baris tampil
+  (placeholder bergaris putus-putus), di produksi baris yang nilainya placeholder **disembunyikan seluruhnya**, bukan tampil "–".
+- `modeElemen(v)` — elemen utuh yang bergantung pada data (lihat §6).
 
 ## 3. Gaya penulisan dummy
 - Bahasa Indonesia baku tapi hangat, kalimat pendek, sudut pandang sekolah ("kami").

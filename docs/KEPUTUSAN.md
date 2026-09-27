@@ -44,3 +44,4 @@ ditandai dengan rujukannya, supaya dokumen utama tetap jadi sumber kebenaran.
 | # | Topik | Keputusan | Diterapkan di |
 |---|---|---|---|
 | 27 | `cek-konten --ketat` (merevisi #24) | Gagal jika masih ada `[ISI]`, `dummy: true`, atau `PUBLIC_SITE_URL` kosong. Statistik `null` tetap tidak menggagalkan. Dummy yang disetujui sekolah dilepas flag-nya. | CONTENT §5, `scripts/cek-konten.mjs` |
+| 28 | Baris berlabel dengan nilai placeholder | Di produksi disembunyikan seluruh barisnya (bukan "–"); di dev tetap tampil bergaris putus-putus. Diterapkan lewat helper `saringBaris()` di `src/lib/isian.ts`, bukan per komponen. | CONTENT §2 |
