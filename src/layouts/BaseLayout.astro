@@ -1,0 +1,119 @@
+---
+/**
+ * Layout semua halaman: meta SEO, canonical, Open Graph, JSON-LD (School + BreadcrumbList), header, footer.
+ * Aturan: docs/SEO.md §2–4. Title ditulis lengkap oleh halaman sesuai tabel SEO §2.
+ */
+import "../styles/global.css";
+import fontLatin from "@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url";
+import Header from "../components/Header.astro";
+import MobileDrawer from "../components/MobileDrawer.astro";
+import Footer from "../components/Footer.astro";
+import WhatsAppFab from "../components/WhatsAppFab.astro";
+import KembaliKeAtas from "../components/KembaliKeAtas.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import { buatSchema, buatSchemaBreadcrumb, type ItemBreadcrumb } from "../lib/schema";
+import { periksaMeta } from "../lib/seo";
+
+interface Props {
+  judul: string;
+  deskripsi: string;
+  /** Jejak halaman TANPA Beranda (ditambahkan otomatis). Kosongkan untuk beranda. */
+  breadcrumb?: ItemBreadcrumb[];
+  /** Halaman yang tidak boleh diindeks (404, kredit foto, /dev) */
+  noindex?: boolean;
+  /** Path gambar OG di public/, 1200×630 */
+  gambarOg?: string;
+  altGambarOg?: string;
+  /** JSON-LD tambahan (NewsArticle, FAQPage) */
+  schema?: Record<string, unknown>[];
+}
+
+const {
+  judul,
+  deskripsi,
+  breadcrumb,
+  noindex = false,
+  gambarOg = "/og/og-default.png",
+  altGambarOg = "Tulisan SMPS YPPAB di atas latar biru",
+  schema = [],
+} = Astro.props;
+
+// `site` selalu terisi: PUBLIC_SITE_URL atau fallback https://example.com (astro.config.mjs)
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+const urlGambarOg = new URL(gambarOg, site).href;
+
+const jejak: ItemBreadcrumb[] | undefined = breadcrumb && [{ label: "Beranda", href: "/" }, ...breadcrumb];
+const semuaSchema = [buatSchema(site), ...(jejak ? [buatSchemaBreadcrumb(jejak, site)] : []), ...schema];
+
+if (!noindex) periksaMeta(Astro.url.pathname, judul, deskripsi);
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      document.documentElement.classList.add("js");
+    </script>
+    <title>{judul}</title>
+    <meta name="description" content={deskripsi} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#1552B8" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SMPS YPPAB" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:title" content={judul} />
+    <meta property="og:description" content={deskripsi} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={urlGambarOg} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={altGambarOg} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={judul} />
+    <meta name="twitter:description" content={deskripsi} />
+    <meta name="twitter:image" content={urlGambarOg} />
+
+    {semuaSchema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body class="bg-putih">
+    <span id="puncak" tabindex="-1"></span>
+    <!-- Penanda 80px untuk A9 (header menyusut setelah gulir 80px) -->
+    <div class="pointer-events-none absolute top-0 left-0 h-20 w-px" aria-hidden="true" data-penanda-gulir></div>
+    <a
+      href="#konten"
+      class="sr-only z-50 rounded-full bg-biru-600 px-6 py-3 font-semibold text-putih focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+    >
+      Langsung ke konten
+    </a>
+
+    <Header />
+    <MobileDrawer />
+
+    <main id="konten" tabindex="-1" class="focus:outline-none">
+      {
+        jejak && (
+          <div class="container-situs pt-6">
+            <Breadcrumb item={jejak} />
+          </div>
+        )
+      }
+      <slot />
+    </main>
+
+    <Footer />
+    <KembaliKeAtas />
+    <WhatsAppFab />
+  </body>
+</html>

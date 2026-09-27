@@ -78,6 +78,188 @@
   max-width: 65ch;
 }
 
+/* Angka besar dekoratif dengan outline biru (DESIGN §5). Selalu aria-hidden + teks sr-only di sebelahnya. */
+@utility angka-garis {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-biru-600);
+}
+
+/* `js:` — hanya berlaku bila JavaScript aktif (class `js` dipasang di <html> oleh BaseLayout).
+   Dipakai untuk fallback tanpa JS: konten & navigasi tetap bisa dipakai tanpa JavaScript. */
+@custom-variant js (&:where(.js, .js *));
+
+/*
+ * A10 micro-interaction: naik 2px + bayangan saat hover/fokus.
+ * Bayangan ada di pseudo-element dan hanya opacity-nya yang dianimasikan (DESIGN §6: hanya transform/opacity).
+ */
+@utility efek-angkat {
+  position: relative;
+  transition: transform 250ms ease-out;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: var(--shadow-kartu);
+    opacity: 0;
+    transition: opacity 250ms ease-out;
+    pointer-events: none;
+  }
+  &:hover,
+  &:focus-visible,
+  &:focus-within {
+    transform: translateY(-2px);
+  }
+  &:hover::after,
+  &:focus-visible::after,
+  &:focus-within::after {
+    opacity: 1;
+  }
+}
+
+/* A10: ikon panah tombol primary bergeser 4px */
+@utility panah-geser {
+  transition: transform 250ms ease-out;
+  :where(a, button):hover > &,
+  :where(a, button):focus-visible > & {
+    transform: translateX(4px);
+  }
+}
+
+@layer components {
+  /* A9 header shrink — hanya transform & opacity */
+  .header-situs {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background-color: var(--color-putih);
+    border-bottom: 1px solid var(--color-biru-100);
+    transition: transform 250ms ease-out;
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      box-shadow: var(--shadow-kartu);
+      opacity: 0;
+      transition: opacity 250ms ease-out;
+      pointer-events: none;
+    }
+    [data-header-isi] {
+      transition: transform 250ms ease-out;
+    }
+    [data-header-logo] {
+      transform-origin: left center;
+      transition: transform 250ms ease-out;
+    }
+    &[data-menyusut] {
+      transform: translateY(-0.75rem);
+      &::after {
+        opacity: 1;
+      }
+      [data-header-isi] {
+        transform: translateY(0.375rem);
+      }
+      [data-header-logo] {
+        transform: scale(0.9);
+      }
+    }
+  }
+
+  /* A16 drawer mobile: panel geser dari kanan, latar memudar */
+  .drawer {
+    margin: 0 0 0 auto;
+    width: 100%;
+    max-width: 24rem;
+    height: 100dvh;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background-color: var(--color-putih);
+    color: var(--color-abu-700);
+    transform: translateX(100%);
+    transition:
+      transform 300ms ease-out,
+      overlay 300ms allow-discrete,
+      display 300ms allow-discrete;
+    &[open] {
+      transform: translateX(0);
+    }
+    &::backdrop {
+      background-color: rgb(7 26 51 / 0.6);
+      opacity: 0;
+      transition:
+        opacity 300ms ease-out,
+        overlay 300ms allow-discrete,
+        display 300ms allow-discrete;
+    }
+    &[open]::backdrop {
+      opacity: 1;
+    }
+  }
+  @starting-style {
+    .drawer[open] {
+      transform: translateX(100%);
+    }
+    .drawer[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /* A12 lightbox: layar penuh, latar gelap memudar */
+  .lightbox {
+    width: 100%;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    &::backdrop {
+      background-color: rgb(7 26 51 / 0.92);
+      opacity: 0;
+      transition:
+        opacity 250ms ease-out,
+        overlay 250ms allow-discrete,
+        display 250ms allow-discrete;
+    }
+    &[open]::backdrop {
+      opacity: 1;
+    }
+    /* Kotak <img> = ukuran gambar yang terlihat (tanpa object-contain), supaya label menempel di pojok gambar.
+       12rem = tinggi baris tombol tutup + baris navigasi/keterangan. */
+    .lightbox-gambar {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: calc(100dvh - 12rem);
+    }
+  }
+  @starting-style {
+    .lightbox[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /* A17 tombol melayang: muncul/hilang dengan opacity + translateY.
+     Hanya disembunyikan bila JS aktif; tanpa JS tombol selalu terlihat. */
+  .js .tombol-melayang-tersembunyi {
+    opacity: 0;
+    transform: translateY(1rem);
+    visibility: hidden;
+    transition:
+      opacity 250ms ease-out,
+      transform 250ms ease-out,
+      visibility 250ms;
+    &[data-tampil] {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
+  }
+}
+
 @layer base {
   html {
     font-family: var(--font-sans);
@@ -101,5 +283,22 @@
   :focus-visible {
     outline: 3px solid var(--color-biru-600);
     outline-offset: 3px;
+  }
+
+  /* Fokus di atas latar gelap (footer, CTA biru-800/950) */
+  .latar-gelap :focus-visible {
+    outline-color: var(--color-putih);
+  }
+
+  /* DESIGN §6: semua animasi & transisi mati saat reduced motion — elemen langsung di posisi akhir */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

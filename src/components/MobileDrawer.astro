@@ -1,0 +1,119 @@
+---
+/**
+ * Menu mobile (A16) memakai <dialog> modal:
+ * - showModal() membuat sisa halaman inert; Tab juga dikunci manual di dalam drawer
+ * - Esc menutup (bawaan <dialog>), klik latar menutup, fokus kembali ke tombol Menu
+ * - Animasi: translateX + opacity latar via @starting-style (global.css), mati saat reduced motion
+ */
+import { X, MessageCircle } from "@lucide/astro";
+import Logo from "./Logo.astro";
+import Button from "./Button.astro";
+import { menuUtama, tautanDaftar, aktif } from "../data/navigasi";
+import { tautanWhatsApp } from "../lib/whatsapp";
+
+const pathname = Astro.url.pathname;
+const wa = tautanWhatsApp();
+---
+
+<dialog id="menu-drawer" class="drawer" aria-label="Menu utama" data-drawer>
+  <div class="flex h-full flex-col gap-8 overflow-y-auto p-6">
+    <div class="flex items-center justify-between gap-4">
+      <Logo />
+      <button
+        type="button"
+        class="inline-flex size-12 items-center justify-center rounded-full text-biru-800 hover:bg-biru-50"
+        aria-label="Tutup menu"
+        data-tutup-menu
+        autofocus
+      >
+        <X size={24} stroke-width={1.75} />
+      </button>
+    </div>
+
+    <nav aria-label="Menu utama (seluler)">
+      <ul class="flex flex-col">
+        {
+          menuUtama.map((m) => {
+            const kini = aktif(m.href, pathname);
+            return (
+              <li>
+                <a
+                  href={m.href}
+                  aria-current={kini ? "page" : undefined}
+                  class:list={[
+                    "flex min-h-12 items-center rounded-kartu px-3 text-lg font-semibold hover:bg-biru-50",
+                    kini ? "bg-biru-50 text-biru-600" : "text-biru-800",
+                  ]}
+                >
+                  {m.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="mt-auto flex flex-col gap-3">
+      <Button href={tautanDaftar.href} class="w-full">Daftar sekarang</Button>
+      {
+        wa && (
+          <Button href={wa} varian="secondary" panah={false} class="w-full" rel="noopener">
+            <MessageCircle size={20} stroke-width={1.75} />
+            Tanya via WhatsApp
+          </Button>
+        )
+      }
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const drawer = document.querySelector<HTMLDialogElement>("[data-drawer]");
+  const tombolBuka = document.querySelector<HTMLButtonElement>("[data-buka-menu]");
+
+  if (drawer && tombolBuka) {
+    const FOKUSABEL = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const buka = () => {
+      drawer.showModal();
+      tombolBuka.setAttribute("aria-expanded", "true");
+      document.body.style.overflow = "hidden";
+    };
+
+    drawer.addEventListener("close", () => {
+      tombolBuka.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+      tombolBuka.focus();
+    });
+
+    tombolBuka.addEventListener("click", buka);
+    drawer.querySelector("[data-tutup-menu]")?.addEventListener("click", () => drawer.close());
+
+    // Klik di latar (area di luar panel) menutup drawer
+    drawer.addEventListener("click", (e) => {
+      if (e.target === drawer) drawer.close();
+    });
+
+    // Kunci Tab di dalam drawer (sebagian browser membiarkan Tab keluar ke UI browser)
+    drawer.addEventListener("keydown", (e) => {
+      if (e.key !== "Tab") return;
+      const elemen = [...drawer.querySelectorAll<HTMLElement>(FOKUSABEL)];
+      const pertama = elemen[0];
+      const terakhir = elemen[elemen.length - 1];
+      if (!pertama || !terakhir) return;
+      if (e.shiftKey && document.activeElement === pertama) {
+        e.preventDefault();
+        terakhir.focus();
+      } else if (!e.shiftKey && document.activeElement === terakhir) {
+        e.preventDefault();
+        pertama.focus();
+      }
+    });
+
+    // Layar melebar ke xl saat drawer terbuka → tutup (menu desktop sudah terlihat)
+    matchMedia("(min-width: 80rem)").addEventListener("change", (e) => {
+      if (e.matches && drawer.open) drawer.close();
+    });
+  }
+</script>

@@ -1,10 +1,11 @@
 ---
-// Kerangka sementara Fase 1 untuk menguji token & data. Diganti penuh di Fase 4.
-import "../styles/global.css";
+// Kerangka sementara sampai Fase 4 (beranda penuh).
+import BaseLayout from "../layouts/BaseLayout.astro";
 import Isian from "../components/Isian.astro";
 import Foto from "../components/Foto.astro";
 import { sekolah } from "../data/sekolah";
 import { saringBaris } from "../lib/isian";
+import { judulBeranda } from "../lib/seo";
 
 const identitas = saringBaris([
   { label: "Status", nilai: sekolah.status },
@@ -14,34 +15,36 @@ const identitas = saringBaris([
 ]);
 ---
 
-<html lang="id">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SMPS YPPAB – SMP Swasta di Jambi</title>
-    <meta name="robots" content="noindex" />
-  </head>
-  <body>
-    <main class="container-situs section-y">
-      <p class="text-eyebrow uppercase text-biru-600">Sedang dibangun</p>
-      <h1 class="text-display">{sekolah.nama}</h1>
-      <p class="teks-lebar mt-6">{sekolah.ringkasan.teks}</p>
-      <dl class="mt-6">
-        {
-          identitas.map((b) => (
-            <div class="flex gap-4">
-              <dt class="font-semibold">{b.label}</dt>
-              <dd>
-                <Isian nilai={b.nilai} />
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
-      <div class="mt-8 grid gap-4 md:grid-cols-2">
-        <Foto src="stok/hero-1" alt="Ilustrasi: dua siswa SMP berseragam putih-biru membaca bersama di halaman sekolah" rasio="16/9" posisi="50% 15%" class="rounded-gambar" />
-        <Foto src="stok/gedung-1" alt="Placeholder foto gedung sekolah" rasio="16/9" class="rounded-gambar" />
-      </div>
-    </main>
-  </body>
-</html>
+<BaseLayout
+  judul={judulBeranda()}
+  deskripsi="SMPS YPPAB adalah SMP swasta di Provinsi Jambi untuk kelas 7–9. Lihat profil sekolah, ekstrakurikuler, berita, dan info Penerimaan Murid Baru (SPMB)."
+>
+  <div class="container-situs section-y">
+    <p class="text-eyebrow text-biru-600 uppercase">Sedang dibangun</p>
+    <h1 class="text-display">{sekolah.nama}</h1>
+    <p class="teks-lebar mt-6">{sekolah.ringkasan.teks}</p>
+    <dl class="mt-6">
+      {
+        identitas.map((b) => (
+          <div class="flex gap-4">
+            <dt class="font-semibold">{b.label}</dt>
+            <dd>
+              <Isian nilai={b.nilai} />
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+    <div class="mt-8 grid gap-4 md:grid-cols-2">
+      <Foto
+        src="stok/hero-1"
+        alt="Ilustrasi: dua siswa SMP berseragam putih-biru membaca bersama di halaman sekolah"
+        rasio="16/9"
+        posisi="50% 15%"
+        sizes="(min-width: 768px) 50vw, 100vw"
+        class="rounded-gambar"
+      />
+      <Foto src="stok/gedung-1" alt="Placeholder foto gedung sekolah" rasio="16/9" class="rounded-gambar" />
+    </div>
+  </div>
+</BaseLayout>

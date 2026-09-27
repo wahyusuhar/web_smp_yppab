@@ -1,0 +1,28 @@
+---
+/**
+ * Badge kecil. `kuning` HANYA untuk "Pendaftaran Dibuka" (DESIGN.md §1).
+ * `contoh` untuk konten dummy: label "Contoh" tampil di dev dan produksi (CONTENT.md §4).
+ */
+interface Props {
+  varian?: "biru" | "kuning" | "contoh";
+  class?: string;
+}
+
+const { varian = "biru", class: kelas } = Astro.props;
+
+const gaya = {
+  biru: "bg-biru-100 text-biru-800",
+  kuning: "bg-kuning-400 text-biru-950",
+  contoh: "border border-dashed border-abu-300 bg-putih text-abu-700",
+};
+---
+
+<span
+  class:list={[
+    "inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs leading-none font-semibold",
+    gaya[varian],
+    kelas,
+  ]}
+>
+  <slot>{varian === "contoh" ? "Contoh" : null}</slot>
+</span>

@@ -1,0 +1,61 @@
+---
+/**
+ * Satu-satunya gaya tombol (DESIGN.md §4). Render <a> bila ada `href`, selain itu <button>.
+ * A10: hover naik 2px + bayangan; primary memakai ikon panah yang bergeser 4px.
+ */
+import { ArrowRight } from "@lucide/astro";
+import type { HTMLAttributes } from "astro/types";
+
+type Varian = "primary" | "secondary" | "ghost";
+
+interface Props extends Omit<HTMLAttributes<"a"> & HTMLAttributes<"button">, "class"> {
+  varian?: Varian;
+  href?: string;
+  /** Panah default hanya untuk primary; set false untuk menyembunyikan */
+  panah?: boolean;
+  /** Tombol di atas latar gelap (biru-800/950) */
+  diLatarGelap?: boolean;
+  class?: string;
+}
+
+const {
+  varian = "primary",
+  href,
+  panah = varian === "primary",
+  diLatarGelap = false,
+  class: kelas,
+  type = "button",
+  ...rest
+} = Astro.props;
+
+const gaya: Record<Varian, string> = {
+  primary: diLatarGelap
+    ? "bg-putih text-biru-800 hover:bg-biru-50"
+    : "bg-biru-600 text-putih hover:bg-biru-800",
+  secondary: diLatarGelap
+    ? "border-2 border-putih text-putih hover:bg-putih/10"
+    : "border-2 border-biru-600 text-biru-600 hover:bg-biru-50",
+  ghost: diLatarGelap ? "text-putih hover:bg-putih/10" : "text-biru-600 hover:bg-biru-50",
+};
+
+const kelasTombol = [
+  "efek-angkat inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold",
+  "transition-colors",
+  gaya[varian],
+  kelas,
+];
+---
+
+{
+  href ? (
+    <a href={href} class:list={kelasTombol} {...rest}>
+      <slot />
+      {panah && <ArrowRight size={20} stroke-width={1.75} class="panah-geser shrink-0" />}
+    </a>
+  ) : (
+    <button type={type} class:list={kelasTombol} {...rest}>
+      <slot />
+      {panah && <ArrowRight size={20} stroke-width={1.75} class="panah-geser shrink-0" />}
+    </button>
+  )
+}

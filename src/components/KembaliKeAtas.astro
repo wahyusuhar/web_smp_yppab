@@ -1,0 +1,46 @@
+---
+/**
+ * Tombol kembali ke atas (A17). Tautan ke #puncak supaya fokus keyboard ikut pindah ke atas.
+ * Dengan JS: muncul setelah gulir ± satu layar. Tanpa JS: selalu terlihat.
+ */
+import { ArrowUp } from "@lucide/astro";
+import { sekolah } from "../data/sekolah";
+import { modeElemen } from "../lib/isian";
+
+// Naik ke atas bila tombol WhatsApp ikut tampil (produksi) atau kotak placeholder-nya (dev), supaya tidak bertumpuk
+const adaFabWa = modeElemen(sekolah.kontak.whatsapp) !== "sembunyi";
+---
+
+<a
+  href="#puncak"
+  class:list={[
+    "tombol-melayang-tersembunyi efek-angkat fixed right-4 z-30 inline-flex size-12 items-center justify-center rounded-full border border-abu-300 bg-putih text-biru-800 hover:bg-biru-50 md:right-6",
+    adaFabWa ? "bottom-20 md:bottom-24" : "bottom-4 md:bottom-6",
+  ]}
+  aria-label="Kembali ke atas"
+  data-kembali-atas
+>
+  <ArrowUp size={24} stroke-width={1.75} />
+</a>
+
+<script>
+  const tombol = document.querySelector<HTMLElement>("[data-kembali-atas]");
+  if (tombol) {
+    let menunggu = false;
+    const perbarui = () => {
+      tombol.toggleAttribute("data-tampil", window.scrollY > window.innerHeight);
+      menunggu = false;
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!menunggu) {
+          menunggu = true;
+          requestAnimationFrame(perbarui);
+        }
+      },
+      { passive: true },
+    );
+    perbarui();
+  }
+</script>

@@ -1,0 +1,49 @@
+---
+/** Eyebrow + judul section + deskripsi (DESIGN.md §2, §4). `data-reveal` disiapkan untuk A2 di fase animasi. */
+interface Props {
+  eyebrow?: string;
+  judul: string;
+  deskripsi?: string;
+  /** Level heading; h2 untuk section biasa */
+  level?: "h1" | "h2";
+  rata?: "kiri" | "tengah";
+  /** id heading, untuk `aria-labelledby` pada <section> */
+  id?: string;
+  diLatarGelap?: boolean;
+  class?: string;
+}
+
+const { eyebrow, judul, deskripsi, level = "h2", rata = "kiri", id, diLatarGelap = false, class: kelas } = Astro.props;
+const Heading = level;
+---
+
+<div class:list={[rata === "tengah" && "mx-auto text-center", "max-w-3xl", kelas]} data-reveal>
+  {
+    eyebrow && (
+      <p class:list={["text-eyebrow uppercase", diLatarGelap ? "text-biru-100" : "text-biru-600"]}>{eyebrow}</p>
+    )
+  }
+  <Heading
+    id={id}
+    class:list={[
+      level === "h1" ? "text-display" : "text-h2",
+      eyebrow && "mt-3",
+      diLatarGelap && "text-putih",
+    ]}
+  >
+    {judul}
+  </Heading>
+  {
+    deskripsi && (
+      <p
+        class:list={[
+          "teks-lebar mt-4",
+          rata === "tengah" && "mx-auto",
+          diLatarGelap ? "text-biru-100" : "text-abu-700",
+        ]}
+      >
+        {deskripsi}
+      </p>
+    )
+  }
+</div>

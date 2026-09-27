@@ -1,0 +1,41 @@
+---
+/**
+ * Timeline sejarah (profil). Garis vertikal `data-garis` & titik `data-titik` disiapkan untuk A6
+ * (scaleY terikat scroll) — tanpa JS semuanya tampil penuh.
+ */
+import Isian from "./Isian.astro";
+import Badge from "./Badge.astro";
+import type { PeristiwaSejarah } from "../data/sekolah";
+
+interface Props {
+  item: PeristiwaSejarah[];
+}
+
+const { item } = Astro.props;
+---
+
+<div class="relative" data-timeline>
+  <span
+    class="absolute top-2 bottom-2 left-3 w-0.5 origin-top bg-biru-400"
+    aria-hidden="true"
+    data-garis></span>
+  <ol class="flex flex-col gap-10">
+    {
+      item.map((p) => (
+        <li class="relative pl-12">
+          <span
+            class="absolute top-1.5 left-0 size-6 rounded-full border-4 border-putih bg-biru-600 shadow-kartu"
+            aria-hidden="true"
+            data-titik
+          />
+          <p class="text-eyebrow text-biru-600 uppercase">
+            <Isian nilai={p.tahun} />
+          </p>
+          <h3 class="mt-1 text-h3">{p.judul}</h3>
+          <p class="teks-lebar mt-2">{p.isi}</p>
+          {p.dummy && <Badge varian="contoh" class="mt-3" />}
+        </li>
+      ))
+    }
+  </ol>
+</div>

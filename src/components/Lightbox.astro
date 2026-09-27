@@ -1,0 +1,128 @@
+---
+/**
+ * Lightbox galeri (A12): zoom dari posisi thumbnail (FLIP, 350ms, hanya transform). Tanpa library.
+ * Pemicu: <a href="{gambar besar}" data-lightbox="{nama grup}"> berisi <img> (alt dipakai sebagai keterangan).
+ * Tanpa JS: tautan membuka gambar besar langsung. Pasang komponen ini sekali per halaman.
+ */
+import { X, ChevronLeft, ChevronRight } from "@lucide/astro";
+---
+
+<dialog class="lightbox" aria-label="Pratinjau foto" data-lightbox-dialog>
+  <div class="flex h-full flex-col gap-4 p-4 md:p-8">
+    <div class="flex justify-end">
+      <button
+        type="button"
+        class="inline-flex size-12 items-center justify-center rounded-full bg-putih text-biru-800 hover:bg-biru-50"
+        aria-label="Tutup pratinjau"
+        data-lightbox-tutup
+        autofocus
+      >
+        <X size={24} stroke-width={1.75} />
+      </button>
+    </div>
+    <div class="flex min-h-0 flex-1 items-center justify-center">
+      <!-- Pembungkus seukuran gambar supaya label "Foto ilustrasi" menempel di pojok kiri bawah gambar -->
+      <div class="relative">
+        <img alt="" class="lightbox-gambar rounded-gambar" data-lightbox-gambar />
+        <span
+          class="pointer-events-none absolute bottom-3 left-3 rounded-full bg-biru-950/75 px-3 py-1 text-xs font-semibold text-putih"
+          aria-hidden="true"
+          hidden
+          data-lightbox-label>Foto ilustrasi</span
+        >
+      </div>
+    </div>
+    <div class="flex items-center justify-between gap-4">
+      <button
+        type="button"
+        class="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-putih text-biru-800 hover:bg-biru-50"
+        aria-label="Foto sebelumnya"
+        data-lightbox-sebelum
+      >
+        <ChevronLeft size={24} stroke-width={1.75} />
+      </button>
+      <p class="text-center text-sm text-putih" aria-live="polite" data-lightbox-keterangan></p>
+      <button
+        type="button"
+        class="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-putih text-biru-800 hover:bg-biru-50"
+        aria-label="Foto berikutnya"
+        data-lightbox-berikut
+      >
+        <ChevronRight size={24} stroke-width={1.75} />
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("[data-lightbox-dialog]");
+  const gambar = dialog?.querySelector<HTMLImageElement>("[data-lightbox-gambar]");
+  const keterangan = dialog?.querySelector<HTMLElement>("[data-lightbox-keterangan]");
+  const label = dialog?.querySelector<HTMLElement>("[data-lightbox-label]");
+
+  if (dialog && gambar && keterangan && label) {
+    const geraknyaDikurangi = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let grup: HTMLAnchorElement[] = [];
+    let indeks = 0;
+    let pemicu: HTMLAnchorElement | null = null;
+
+    const tampilkan = async (tautan: HTMLAnchorElement, zoom: boolean) => {
+      const thumb = tautan.querySelector("img");
+      gambar.src = tautan.href;
+      gambar.alt = thumb?.alt ?? "";
+      keterangan.textContent = `${thumb?.alt ?? ""} (${indeks + 1} dari ${grup.length})`;
+      // Label "Foto ilustrasi" ikut tampil bila thumbnail-nya foto stok (DESIGN §5)
+      label.hidden = !tautan.querySelector("[data-label-ilustrasi]");
+      await gambar.decode().catch(() => undefined);
+
+      // FLIP: mulai dari kotak thumbnail, berakhir di posisi lightbox
+      if (!zoom || !thumb || geraknyaDikurangi()) return;
+      const awal = thumb.getBoundingClientRect();
+      const akhir = gambar.getBoundingClientRect();
+      if (akhir.width === 0 || akhir.height === 0) return;
+      gambar.animate(
+        [
+          {
+            transform: `translate(${awal.left - akhir.left}px, ${awal.top - akhir.top}px) scale(${awal.width / akhir.width}, ${awal.height / akhir.height})`,
+            transformOrigin: "top left",
+          },
+          { transform: "none", transformOrigin: "top left" },
+        ],
+        { duration: 350, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" },
+      );
+    };
+
+    const geser = (arah: 1 | -1) => {
+      if (grup.length < 2) return;
+      indeks = (indeks + arah + grup.length) % grup.length;
+      const tautan = grup[indeks];
+      if (tautan) void tampilkan(tautan, false);
+    };
+
+    document.addEventListener("click", (e) => {
+      const tautan = (e.target as Element).closest<HTMLAnchorElement>("a[data-lightbox]");
+      if (!tautan || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault();
+      pemicu = tautan;
+      grup = [...document.querySelectorAll<HTMLAnchorElement>(`a[data-lightbox="${tautan.dataset.lightbox}"]`)];
+      indeks = Math.max(0, grup.indexOf(tautan));
+      dialog.showModal();
+      void tampilkan(tautan, true);
+    });
+
+    dialog.querySelector("[data-lightbox-tutup]")?.addEventListener("click", () => dialog.close());
+    dialog.querySelector("[data-lightbox-sebelum]")?.addEventListener("click", () => geser(-1));
+    dialog.querySelector("[data-lightbox-berikut]")?.addEventListener("click", () => geser(1));
+    dialog.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") geser(-1);
+      if (e.key === "ArrowRight") geser(1);
+    });
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      gambar.removeAttribute("src");
+      pemicu?.focus();
+    });
+  }
+</script>

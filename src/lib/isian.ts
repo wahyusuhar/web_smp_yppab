@@ -11,7 +11,7 @@ export const KOSONG = "–";
 type NilaiIsian = string | number | null | undefined;
 
 /** true jika nilai masih placeholder ("[ISI: ...]") atau kosong (null/undefined). */
-export function isIsi(v: NilaiIsian): v is string | null | undefined {
+export function isIsi(v: NilaiIsian): boolean {
   if (v === null || v === undefined) return true;
   return typeof v === "string" && POLA_ISI.test(v);
 }
@@ -22,7 +22,7 @@ export function isIsi(v: NilaiIsian): v is string | null | undefined {
  */
 export function tampil(v: NilaiIsian): string {
   if (!isIsi(v)) return String(v);
-  if (import.meta.env.DEV) return v ?? "[ISI]";
+  if (import.meta.env.DEV) return String(v ?? "[ISI]");
   return KOSONG;
 }
 

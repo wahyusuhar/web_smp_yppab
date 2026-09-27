@@ -1,0 +1,28 @@
+---
+/**
+ * Wordmark teks "SMPS YPPAB".
+ * TODO: ganti dengan logo resmi sekolah bila sudah ada. JANGAN menggambar lambang karangan (DESIGN.md §7).
+ */
+import { sekolah } from "../data/sekolah";
+
+interface Props {
+  /** "terang" untuk latar putih, "gelap" untuk latar biru-950 (footer) */
+  varian?: "terang" | "gelap";
+  class?: string;
+}
+
+const { varian = "terang", class: kelas } = Astro.props;
+---
+
+<span
+  class:list={[
+    "inline-flex items-baseline gap-1 text-xl leading-none font-extrabold tracking-tight",
+    varian === "terang" ? "text-biru-800" : "text-putih",
+    kelas,
+  ]}
+>
+  <span>{sekolah.nama.split(" ")[0]}</span>
+  <span class:list={[varian === "terang" ? "text-biru-600" : "text-biru-400"]}>
+    {sekolah.nama.split(" ").slice(1).join(" ")}
+  </span>
+</span>

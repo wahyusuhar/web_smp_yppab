@@ -1,0 +1,46 @@
+---
+/**
+ * Satu-satunya gaya kartu (DESIGN.md §4). Dengan `href`, seluruh kartu menjadi tautan (judul = teks tautan).
+ * `dummy` menampilkan badge "Contoh" (CONTENT.md §4).
+ */
+import Badge from "./Badge.astro";
+
+interface Props {
+  judul: string;
+  href?: string;
+  dummy?: boolean;
+  /** Tingkat heading judul kartu; h3 di dalam section ber-h2 */
+  level?: "h2" | "h3";
+  class?: string;
+}
+
+const { judul, href, dummy = false, level = "h3", class: kelas } = Astro.props;
+const Heading = level;
+---
+
+<article
+  class:list={[
+    "efek-angkat flex h-full flex-col overflow-hidden rounded-kartu border border-abu-300 bg-putih",
+    href &&
+      "has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-3 has-[a:focus-visible]:outline-biru-600",
+    kelas,
+  ]}
+  data-kartu
+>
+  {Astro.slots.has("media") && <slot name="media" />}
+  <div class="flex flex-1 flex-col gap-3 p-6">
+    {dummy && <Badge varian="contoh" class="self-start" />}
+    <Heading class="text-h3">
+      {
+        href ? (
+          <a href={href} class="after:absolute after:inset-0 focus-visible:outline-none">
+            {judul}
+          </a>
+        ) : (
+          judul
+        )
+      }
+    </Heading>
+    <div class="text-abu-700"><slot /></div>
+  </div>
+</article>

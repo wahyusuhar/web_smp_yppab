@@ -1,0 +1,85 @@
+---
+/**
+ * Header sticky + A9 (mengecil setelah gulir 80px lewat transform; bayangan pseudo-element di-fade).
+ * Menu lengkap tampil mulai xl (≥1280px); di bawahnya lewat MobileDrawer.
+ * Tanpa JS: tombol menu menjadi tautan ke "Tautan cepat" di footer.
+ */
+import { Menu } from "@lucide/astro";
+import Logo from "./Logo.astro";
+import Button from "./Button.astro";
+import { menuUtama, tautanDaftar, aktif } from "../data/navigasi";
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="header-situs" data-header>
+  <div class="container-situs flex h-20 items-center justify-between gap-6" data-header-isi>
+    <a href="/" class="rounded-sm" aria-label="SMPS YPPAB – Beranda" data-header-logo>
+      <Logo />
+    </a>
+
+    <nav aria-label="Menu utama" class="hidden xl:block">
+      <ul class="flex items-center gap-6">
+        {
+          menuUtama.map((m) => {
+            const kini = aktif(m.href, pathname);
+            return (
+              <li>
+                <a
+                  href={m.href}
+                  aria-current={kini ? "page" : undefined}
+                  class:list={[
+                    "rounded-sm py-2 font-semibold underline-offset-8 hover:text-biru-600 hover:underline",
+                    kini ? "text-biru-600 underline decoration-2" : "text-biru-800",
+                  ]}
+                >
+                  {m.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <!-- Pembungkus mengatur visibilitas: kelas `hidden` pada Button kalah oleh `inline-flex` bawaannya -->
+      <div class="hidden sm:block">
+        <Button href={tautanDaftar.href} aria-current={aktif(tautanDaftar.href, pathname) ? "page" : undefined}>
+          {tautanDaftar.label}
+        </Button>
+      </div>
+
+      <!-- Tanpa JS: lompat ke tautan cepat di footer -->
+      <a
+        href="#tautan-cepat"
+        class="inline-flex min-h-12 items-center gap-2 rounded-full px-4 font-semibold text-biru-800 xl:hidden js:hidden"
+      >
+        <Menu size={24} stroke-width={1.75} />
+        Menu
+      </a>
+      <button
+        type="button"
+        class="hidden min-h-12 items-center gap-2 rounded-full px-4 font-semibold text-biru-800 hover:bg-biru-50 js:inline-flex xl:js:hidden"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="menu-drawer"
+        data-buka-menu
+      >
+        <Menu size={24} stroke-width={1.75} />
+        Menu
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  // A9: tandai header "menyusut" setelah gulir 80px — pakai IntersectionObserver, bukan listener scroll
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const penanda = document.querySelector<HTMLElement>("[data-penanda-gulir]");
+  if (header && penanda) {
+    new IntersectionObserver(([entri]) => {
+      header.toggleAttribute("data-menyusut", !entri?.isIntersecting);
+    }).observe(penanda);
+  }
+</script>

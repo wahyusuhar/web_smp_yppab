@@ -1,0 +1,125 @@
+---
+/**
+ * Footer: identitas, kontak, tautan cepat, media sosial (PRD §5).
+ * Baris kontak yang masih placeholder disembunyikan di produksi lewat saringBaris().
+ * `#tautan-cepat` juga menjadi tujuan tombol Menu saat JavaScript mati.
+ */
+import Logo from "./Logo.astro";
+import Isian from "./Isian.astro";
+import { sekolah } from "../data/sekolah";
+import { menuUtama, tautanDaftar } from "../data/navigasi";
+import { saringBaris, isIsi, modeElemen } from "../lib/isian";
+import { alamatLengkap } from "../lib/alamat";
+
+const { kontak } = sekolah;
+
+const barisKontak = saringBaris([
+  { label: "Alamat", nilai: alamatLengkap(), href: undefined },
+  {
+    label: "Telepon",
+    nilai: kontak.telepon,
+    href: isIsi(kontak.telepon) ? undefined : `tel:${kontak.telepon.replace(/[^\d+]/g, "")}`,
+  },
+  { label: "Email", nilai: kontak.email, href: isIsi(kontak.email) ? undefined : `mailto:${kontak.email}` },
+  { label: "Jam layanan", nilai: sekolah.jamLayanan, href: undefined },
+]);
+
+const NAMA_SOSMED: Record<keyof typeof sekolah.sosialMedia, string> = {
+  instagram: "Instagram",
+  facebook: "Facebook",
+  youtube: "YouTube",
+  tiktok: "TikTok",
+};
+const sosmed = Object.entries(sekolah.sosialMedia)
+  .filter((e): e is [keyof typeof NAMA_SOSMED, string] => e[1] !== null)
+  .map(([k, url]) => ({ label: NAMA_SOSMED[k], url }));
+const modeSosmed = modeElemen(Object.values(sekolah.sosialMedia));
+
+const tautanCepat = [...menuUtama, { label: "Pendaftaran (SPMB)", href: tautanDaftar.href }];
+const tahun = new Date().getFullYear();
+---
+
+<footer class="latar-gelap bg-biru-950 text-biru-100">
+  <div class="container-situs grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4">
+    <div class="flex flex-col gap-4">
+      <Logo varian="gelap" />
+      <p>
+        {`${sekolah.jenjang} ${sekolah.status} di Provinsi ${sekolah.alamat.provinsi}`}
+        {!isIsi(sekolah.namaLengkap) && <span class="block">{sekolah.namaLengkap}</span>}
+      </p>
+    </div>
+
+    {
+      barisKontak.length > 0 && (
+        <section aria-labelledby="footer-kontak">
+          <h2 id="footer-kontak" class="text-eyebrow text-putih uppercase">
+            Kontak
+          </h2>
+          <dl class="mt-4 flex flex-col gap-3">
+            {barisKontak.map((b) => (
+              <div>
+                <dt class="text-sm text-biru-400">{b.label}</dt>
+                <dd class="text-putih">
+                  {b.href ? (
+                    <a href={b.href} class="underline-offset-4 hover:underline">
+                      {b.nilai}
+                    </a>
+                  ) : (
+                    <Isian nilai={b.nilai} />
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )
+    }
+
+    <nav aria-labelledby="footer-tautan" id="tautan-cepat" tabindex="-1" class="rounded-sm">
+      <h2 id="footer-tautan" class="text-eyebrow text-putih uppercase">Tautan cepat</h2>
+      <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 lg:grid-cols-1">
+        {
+          tautanCepat.map((t) => (
+            <li>
+              <a href={t.href} class="text-putih underline-offset-4 hover:underline">
+                {t.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    {
+      modeSosmed !== "sembunyi" && (
+        <section aria-labelledby="footer-sosmed">
+          <h2 id="footer-sosmed" class="text-eyebrow text-putih uppercase">
+            Media sosial
+          </h2>
+          {modeSosmed === "tampil" ? (
+            <ul class="mt-4 flex flex-col gap-2">
+              {sosmed.map((s) => (
+                <li>
+                  <a href={s.url} rel="noopener me" class="text-putih underline-offset-4 hover:underline">
+                    {s.label} SMPS YPPAB
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="mt-4 rounded-kartu border border-dashed border-biru-400 p-3 text-sm">
+              Akun media sosial resmi belum diisi di sekolah.ts (placeholder, hanya di dev)
+            </p>
+          )}
+        </section>
+      )
+    }
+  </div>
+
+  <div class="border-t border-biru-800">
+    <div class="container-situs flex flex-col gap-2 py-6 text-sm md:flex-row md:justify-between">
+      <p>© {tahun} SMPS YPPAB. Seluruh hak dilindungi.</p>
+      <a href="/kredit-foto/" class="underline-offset-4 hover:underline">Kredit foto</a>
+    </div>
+  </div>
+</footer>

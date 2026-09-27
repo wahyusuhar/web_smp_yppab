@@ -1,0 +1,37 @@
+---
+/** Breadcrumb terlihat (SEO.md §2). JSON-LD BreadcrumbList dibuat BaseLayout dari data yang sama. */
+import { ChevronRight } from "@lucide/astro";
+import type { ItemBreadcrumb } from "../lib/schema";
+
+interface Props {
+  item: ItemBreadcrumb[];
+}
+
+const { item } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="text-sm">
+  <ol class="flex flex-wrap items-center gap-1 text-abu-700">
+    {
+      item.map((b, i) => {
+        const terakhir = i === item.length - 1;
+        return (
+          <li class="flex items-center gap-1">
+            {terakhir ? (
+              <span aria-current="page" class="font-semibold text-biru-800">
+                {b.label}
+              </span>
+            ) : (
+              <>
+                <a href={b.href} class="underline-offset-4 hover:text-biru-600 hover:underline">
+                  {b.label}
+                </a>
+                <ChevronRight size={16} stroke-width={1.75} />
+              </>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>

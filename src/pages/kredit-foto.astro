@@ -1,22 +1,19 @@
 ---
 // Kredit foto (docs/ASSETS.md §6). noindex & tidak masuk sitemap (SEO.md §3).
-// Kerangka HTML sementara; dipindah ke BaseLayout di Fase 3.
-import "../styles/global.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import { kreditFoto, URL_LISENSI, wajibAtribusi } from "../data/kredit";
 
 const denganAtribusi = kreditFoto.filter((k) => wajibAtribusi(k.lisensi));
 const lainnya = kreditFoto.filter((k) => !wajibAtribusi(k.lisensi));
 ---
 
-<html lang="id">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kredit Foto – SMPS YPPAB</title>
-    <meta name="robots" content="noindex" />
-  </head>
-  <body>
-    <main class="container-situs section-y">
+<BaseLayout
+  judul="Kredit Foto – SMPS YPPAB"
+  deskripsi="Daftar sumber, fotografer, dan lisensi foto ilustrasi yang dipakai di website SMPS YPPAB."
+  breadcrumb={[{ label: "Kredit Foto", href: "/kredit-foto/" }]}
+  noindex
+>
+    <div class="container-situs pt-8 pb-20 lg:pb-32">
       <h1 class="text-h2">Kredit Foto</h1>
       <p class="teks-lebar mt-4">
         Sebagian foto di website SMPS YPPAB adalah foto ilustrasi dari penyedia foto bebas pakai, bukan foto kegiatan
@@ -83,6 +80,5 @@ const lainnya = kreditFoto.filter((k) => !wajibAtribusi(k.lisensi));
           </table>
         </div>
       </section>
-    </main>
-  </body>
-</html>
+    </div>
+</BaseLayout>

@@ -30,12 +30,13 @@ const foto = cariFoto(src);
 const LEBAR = [480, 800, 1200, 1600, 2000, 2400];
 const lebar =
   foto.jenis === "gambar" ? LEBAR.filter((w) => w <= foto.gambar.width).concat(foto.gambar.width) : [];
-const gayaGambar = [rasio && `aspect-ratio: ${rasio}`, posisi && `object-position: ${posisi}`]
-  .filter(Boolean)
-  .join("; ");
+// Rasio dipasang di <figure> (bukan <img>) agar label tetap menempel di tepi gambar;
+// `self-start` mencegah figure meregang di grid/flex sehingga aspect-ratio tetap berlaku.
+const gayaFigure = rasio ? `aspect-ratio: ${rasio}` : undefined;
+const gayaGambar = posisi ? `object-position: ${posisi}` : undefined;
 ---
 
-<figure class:list={["relative overflow-hidden", kelas]}>
+<figure class:list={["relative overflow-hidden", rasio && "self-start", kelas]} style={gayaFigure}>
   {
     foto.jenis === "gambar" ? (
       <Picture
@@ -47,8 +48,9 @@ const gayaGambar = [rasio && `aspect-ratio: ${rasio}`, posisi && `object-positio
         loading={prioritas ? "eager" : "lazy"}
         fetchpriority={prioritas ? "high" : "auto"}
         decoding={prioritas ? "sync" : "async"}
-        class:list={["block h-auto w-full", rasio && "object-cover"]}
-        style={gayaGambar || undefined}
+        class:list={["block w-full", rasio ? "h-full object-cover" : "h-auto"]}
+        style={gayaGambar}
+        pictureAttributes={{ class: rasio ? "block h-full w-full" : "block" }}
       />
     ) : (
       <img
@@ -57,8 +59,8 @@ const gayaGambar = [rasio && `aspect-ratio: ${rasio}`, posisi && `object-positio
         width="1600"
         height="1067"
         loading={prioritas ? "eager" : "lazy"}
-        class:list={["block h-auto w-full", rasio && "object-cover"]}
-        style={gayaGambar || undefined}
+        class:list={["block w-full", rasio ? "h-full object-cover" : "h-auto"]}
+        style={gayaGambar}
       />
     )
   }
@@ -67,6 +69,7 @@ const gayaGambar = [rasio && `aspect-ratio: ${rasio}`, posisi && `object-positio
       <span
         class="pointer-events-none absolute bottom-3 left-3 rounded-full bg-biru-950/75 px-3 py-1 text-xs font-semibold text-putih"
         aria-hidden="true"
+        data-label-ilustrasi
       >
         Foto ilustrasi
       </span>
