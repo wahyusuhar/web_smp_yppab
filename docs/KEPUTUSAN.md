@@ -110,3 +110,18 @@ ditandai dengan rujukannya, supaya dokumen utama tetap jadi sumber kebenaran.
 | 61 | Placeholder foto di produksi (memperluas #51) | Satu aturan di `Foto`: placeholder SVG tidak dirender di produksi (prop `opsional` dihapus). `Card` dengan prop `foto` beralih otomatis ke varian tanpa foto (ikon Lucide dari field `ikon` di `sekolah.ts` + latar biru-50) — dipakai kartu ekskul & fasilitas. Item galeri placeholder dilewati sehingga grid rapat. Dev tetap menampilkan placeholder. Terverifikasi: 0 placeholder SVG di seluruh HTML produksi. |
 | 62 | Tombol hero di mobile | Button `ringkasDiMobile`: di bawah `sm` `px-3`, `text-sm`, tanpa panah, `whitespace-nowrap`. Kedua tombol hero sejajar & satu baris mulai 360px (diuji 360/375/393/412/768px); di bawah 360px tombol turun utuh ke baris baru, teks tidak terlipat. |
 | 63 | Berita terbaru di beranda (menegaskan #59) | WAJIB ditambahkan di Fase 6 bersama content collection berita (dicatat juga di PROMPT-AWAL.md Fase 6). |
+
+## Fase 5 — Halaman lain — 2026-09-28
+
+| # | Topik | Keputusan |
+|---|---|---|
+| 64 | Hero halaman dalam | `PageHero`: breadcrumb + h1 (skala h2, weight 800) + pengantar di latar biru-50 dengan garis "dasi"; tanpa foto/slideshow. Dirender BaseLayout lewat prop `h1`/`pengantar`; slot `hero-tambahan` untuk badge (pendaftaran). Section setelahnya berselang-seling putih/biru-50 mengikuti section yang benar-benar dirender. |
+| 65 | A14 tanpa menyembunyikan isi | Isi kartu ekskul selalu terlihat penuh (kontras AA, terbaca tanpa hover, kartu tak punya elemen fokus). Yang "terungkap" saat hover/`:focus-within` hanya lapisan dekoratif: foto 1.05, garis aksen scaleX 0→1, detail naik 4px; hanya di perangkat ber-hover & `js-anim`. |
+| 66 | Guru & staf | Nama guru = fakta terverifikasi: kartu dengan nama placeholder tidak dirender di produksi (saringBaris); bila kosong semua, tampil kalimat "Data guru dan staf SMPS YPPAB sedang diperbarui". Avatar inisial, ikon orang bila nama placeholder (tanpa foto stok orang). |
+| 67 | Tahun di timeline & nama kepala sekolah | Tahun/nama yang masih placeholder tidak dirender di produksi (bukan "–"). |
+| 68 | FAQPage | JSON-LD `FAQPage` hanya dipasang bila FAQ bukan dummy (`buatSchemaFaq()`), sejalan dengan aturan NewsArticle (SEO §4): jawaban karangan tidak masuk structured data. Saat ini FAQ dummy → belum ada FAQPage. |
+| 69 | Pendaftaran | `dibuka=false` → badge biru "Informasi pendaftaran segera diumumkan"; `true` → badge kuning "Pendaftaran Dibuka". Jadwal (tahun ajaran + gelombang) & biaya lewat saringBaris; section hilang di produksi bila kosong. FAQ memakai `<details>` (bisa dipakai keyboard, tanpa JS). |
+| 70 | Kontak | Baris kontak/peta/sosmed placeholder disembunyikan di produksi; bila semuanya kosong tampil "Informasi kontak SMPS YPPAB sedang diperbarui." |
+| 71 | Galeri | Masonry dengan CSS columns; lightbox memakai versi webp 1600px; item placeholder dilewati di produksi. Kalimat "akan segera kami perbarui" tampil selama `adaFotoStok("galeri")`. |
+| 72 | Label logo (WCAG 2.5.3) | Tautan logo tidak lagi memakai `aria-label`; nama aksesibel = teks logo + " – Beranda" (sr-only), ditemukan lewat audit Lighthouse `label-content-name-mismatch`. |
+| 73 | Uji Fase 5 | 9 halaman × (luapan 360/768/1280, satu h1, tanpa "–" kosong, tanpa JS, Tab sampai footer dengan fokus terlihat): 72/72 lulus. Regresi beranda 25/25, keyboard 26/26, tombol hero 6/6. |
