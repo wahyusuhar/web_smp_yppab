@@ -1,6 +1,6 @@
 /**
  * Foto galeri (docs/ASSETS.md §5, slot galeri). Alt foto stok diawali "Ilustrasi:" (ASSETS §4).
- * Status "Foto ilustrasi" dibaca otomatis dari src/data/kredit.ts. Slot 10–12 masih placeholder (ASSETS-TODO.md).
+ * Status "Foto ilustrasi" dibaca otomatis dari src/data/kredit.ts.
  */
 export interface FotoGaleri {
   /** Path relatif terhadap src/assets/images/ */
@@ -18,7 +18,7 @@ export const fotoGaleri: FotoGaleri[] = [
   { src: "stok/galeri-7", alt: "Ilustrasi: siswa SMP berseragam biru duduk menonton class meeting" },
   { src: "stok/galeri-8", alt: "Ilustrasi: suasana kelas dengan siswa berseragam batik" },
   { src: "stok/galeri-9", alt: "Ilustrasi: guru mengajar di depan kelas" },
-  { src: "stok/galeri-10", alt: "Placeholder foto galeri" },
-  { src: "stok/galeri-11", alt: "Placeholder foto galeri" },
-  { src: "stok/galeri-12", alt: "Placeholder foto galeri" },
+  { src: "stok/galeri-10", alt: "Ilustrasi: siswa berseragam Pramuka menyimak guru di depan layar kelas" },
+  { src: "stok/galeri-11", alt: "Ilustrasi: tiga siswi anggota Pramuka berdiri berbaris" },
+  { src: "stok/galeri-12", alt: "Ilustrasi: gedung sekolah beratap biru di antara pepohonan" },
 ];

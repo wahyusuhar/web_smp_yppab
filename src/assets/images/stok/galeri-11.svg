@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1067" viewBox="0 0 1600 1067" role="img" aria-label="Placeholder: Foto galeri 11">
-  <rect width="1600" height="1067" fill="#DDEAFB"/>
-  <g transform="translate(704 380) scale(8)" fill="none" stroke="#1552B8" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/>
-    <circle cx="12" cy="13" r="3"/>
-  </g>
-  <text x="800" y="700" text-anchor="middle" font-family="system-ui, sans-serif" font-size="44" font-weight="700" fill="#0B3470">Foto galeri 11</text>
-  <text x="800" y="760" text-anchor="middle" font-family="system-ui, sans-serif" font-size="30" fill="#334155">slot: galeri-11 — ganti dengan foto asli (docs/ASSETS-TODO.md)</text>
-</svg>

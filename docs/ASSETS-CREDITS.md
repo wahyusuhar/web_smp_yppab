@@ -5,6 +5,8 @@ Semua file ada di `src/assets/images/stok/`, diunduh dari URL unduhan resmi yang
 diperkecil ke sisi panjang maks. 2400px (hero) / 2000px (lainnya), metadata EXIF dibuang.
 `hero-1.jpg` juga dipotong (area x 0–3650, y 1276–4850 dari file asli 7655×5106) — lihat KEPUTUSAN #37.
 `hero-2.jpg` dan `hero-3.jpg`: label nama siswa, nomor peserta, tulisan badge, dan nama regu diburamkan (KEPUTUSAN #50).
+`fasilitas-4.jpg` (logo merek monitor), `ekskul-5.jpg` (tulisan "FIRST AID KIT"), `galeri-10.jpg` (teks layar, nama sekolah
+di seragam), `galeri-11.jpg` (label nama & badge) juga diburamkan sebagian (KEPUTUSAN #77).
 
 Lisensi CC BY / CC BY-SA mewajibkan atribusi (nama pembuat, lisensi, tautan) — ditampilkan di halaman `/kredit-foto`.
 CC BY-SA: foto yang diubah (crop/resize) tetap berlisensi CC BY-SA.
@@ -42,12 +44,27 @@ CC BY-SA: foto yang diubah (crop/resize) tetap berlisensi CC BY-SA.
 | berita | `berita-5.jpg` | https://unsplash.com/photos/students-are-taking-a-test-in-a-classroom-TmdrCRVDOnQ | Fajar Herlambang STUDIO | Unsplash License | 2026-09-28 | diubah ukurannya |
 | berita | `berita-6.jpg` | https://www.pexels.com/photo/a-group-of-students-reading-12719306/ | Roman Odintsov | Pexels License | 2026-09-28 | diubah ukurannya |
 
+Slot yang diisi 2026-09-28 (sebelumnya placeholder):
+
+| Slot | File | URL halaman | Fotografer | Lisensi | Tanggal unduh | Perubahan |
+|---|---|---|---|---|---|---|
+| gedung | `gedung-1.jpg` | https://commons.wikimedia.org/wiki/File:SMP_Islam_Al-Ummah-1.jpg | Indonesiagood | CC BY 4.0 | 2026-09-28 | diubah ukurannya |
+| fasilitas | `fasilitas-4.jpg` | https://unsplash.com/photos/two-computer-monitors-on-a-desk-4pNYr-ftf3g | Duskfall Crew | Unsplash License | 2026-09-28 | diburamkan sebagian dan diubah ukurannya |
+| ekskul | `ekskul-5.jpg` | https://www.pexels.com/photo/first-aid-kit-on-white-background-5149759/ | Roger Brown | Pexels License | 2026-09-28 | diburamkan sebagian dan diubah ukurannya |
+| ekskul | `ekskul-6.jpg` | https://unsplash.com/photos/black-and-gray-desk-globe-on-notebook-xqC7hdLMpgk | lilartsy | Unsplash License | 2026-09-28 | diubah ukurannya |
+| galeri | `galeri-10.jpg` | https://commons.wikimedia.org/wiki/File:The_atmosphere_of_a_junior_high_school_classroom_in_Indonesia.jpg | Fitrah 9131 | CC BY 3.0 | 2026-09-28 | diburamkan sebagian dan diubah ukurannya |
+| galeri | `galeri-11.jpg` | https://unsplash.com/photos/three-scouts-in-tan-uniforms-yrShL3O2m5s | Fajar Herlambang STUDIO | Unsplash License | 2026-09-28 | diburamkan sebagian dan diubah ukurannya |
+| galeri | `galeri-12.jpg` | https://commons.wikimedia.org/wiki/File:SMP_Negeri_1_Palangka_Raya_001.jpg | Ilham Mufti Laksono | CC BY-SA 4.0 | 2026-09-28 | diubah ukurannya |
+
 Judul karya (wajib untuk atribusi Creative Commons, sama dengan field `judul` di kredit.ts):
+- `gedung-1.jpg`: "SMP Islam Al-Ummah-1"
+- `galeri-10.jpg`: "The atmosphere of a junior high school classroom in Indonesia"
+- `galeri-12.jpg`: "SMP Negeri 1 Palangka Raya 001"
 - `kegiatan-kelas-2.jpg`: "Literasi Siswa SMP Negeri Satap Oebelo Kab.TTS"
 - `kegiatan-kelas-3.jpg`: "Student at SMP Negeri 2 Kotabaru"
 - `galeri-7.jpg`: "Siswa siswi yang sedang menonton clasmeet"
 
-Slot tanpa foto (placeholder SVG): lihat `docs/ASSETS-TODO.md`.
+Foto yang wajib/disarankan diganti foto asli sekolah: lihat `docs/ASSETS-TODO.md`.
 
 ## Logo
 

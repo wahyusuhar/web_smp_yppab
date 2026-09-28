@@ -1,15 +1,22 @@
-# ASSETS-TODO.md — Foto yang Belum Ada
+# ASSETS-TODO.md — Foto yang Harus Diganti Sebelum Rilis
 
-Slot di bawah ini memakai placeholder SVG (`src/assets/images/stok/{slot}.svg`: latar biru-100, ikon kamera, label slot).
-Ganti dengan foto asli sekolah, lalu catat di `src/data/kredit.ts` dan `docs/ASSETS-CREDITS.md` bila fotonya bukan milik sekolah.
+Per 2026-09-28 **tidak ada lagi slot placeholder**: semua slot di ASSETS.md §5 berisi foto stok berlisensi
+(lihat `docs/ASSETS-CREDITS.md`, KEPUTUSAN #77). Mekanisme placeholder tetap ada di kode — bila kelak sebuah foto
+dihapus, `src/assets/images/stok/{slot}.svg` akan tampil di dev dan disembunyikan di produksi (CONTENT §6).
 
-| Slot | File placeholder | Alasan belum ada foto | Saran pengganti |
-|---|---|---|---|
-| gedung | `gedung-1.svg` | Sengaja tidak memakai foto stok: foto gedung sekolah lain di halaman Profil (dan gambar OG) akan dibaca pengunjung sebagai gedung SMPS YPPAB, walau diberi alt "Ilustrasi". Kandidat dari Commons (gedung SMP lain) juga memuat papan nama sekolah. | Foto asli tampak depan gedung, landscape, siang hari, tanpa kendaraan menutupi. WAJIB sebelum rilis. |
-| ekskul (PMR) | `ekskul-5.svg` | Foto P3K yang tersedia memuat teks "FIRST AID KIT" yang jelas terbaca; foto pelatihan PMR yang ada memperlihatkan siswa luar negeri. | Foto kegiatan PMR sekolah (latihan membalut, petugas UKS saat upacara). |
-| ekskul (English Club) | `ekskul-6.svg` | Tidak ada foto siswa Indonesia yang cocok; alternatif tanpa orang (kamus/buku) penuh teks yang terbaca. | Foto kegiatan English Club (presentasi, drama pendek). |
-| fasilitas (Lab Komputer) | `fasilitas-4.svg` | Foto lab kosong memperlihatkan logo merek (HP, Apple); foto lab dengan siswa berasal dari luar negeri (India, Vietnam). | Foto asli lab komputer sekolah. WAJIB sebelum rilis. |
-| galeri | `galeri-10.svg`, `galeri-11.svg`, `galeri-12.svg` | Tiga kandidat ditolak saat cek ukuran final: label nama siswa dan nama sekolah lain terbaca, atau teks layar terbaca. | Foto kegiatan asli sekolah. Seluruh slot galeri WAJIB diganti foto asli sebelum rilis. |
+## Wajib diganti foto asli sekolah sebelum rilis (ASSETS.md §5 "YA")
 
-Semua slot yang ASSETS.md §5 tandai "YA" (hero, gedung, fasilitas, galeri) tetap wajib diganti foto asli sebelum rilis,
-termasuk yang saat ini sudah berisi foto stok.
+| Slot | File sekarang (foto stok) | Catatan |
+|---|---|---|
+| hero | `hero-1.jpg`, `hero-2.jpg`, `hero-3.jpg` | Slideshow beranda |
+| gedung | `gedung-1.jpg` | Foto gedung **sekolah lain** (Commons) — juga menjadi hero halaman Profil. Paling mendesak diganti: pengunjung bisa mengira ini gedung SMPS YPPAB meski berlabel "Foto ilustrasi". Setelah foto asli ada, gambar OG boleh dibuat dari foto gedung (SEO §3). |
+| fasilitas | `fasilitas-1.jpg` … `fasilitas-6.jpg` | Termasuk Lab Komputer (monitor dengan logo diburamkan) |
+| galeri | `galeri-1.jpg` … `galeri-12.jpg` | Termasuk galeri-10 (layar & nama sekolah diburamkan), galeri-11 (label nama diburamkan), galeri-12 (gedung sekolah lain) |
+
+## Disarankan diganti
+
+| Slot | File | Saran pengganti |
+|---|---|---|
+| ekskul (PMR) | `ekskul-5.jpg` | Foto kegiatan PMR sekolah (latihan membalut, petugas UKS saat upacara) |
+| ekskul (English Club) | `ekskul-6.jpg` | Foto kegiatan English Club (presentasi, drama pendek) |
+| kegiatan-kelas | `kegiatan-kelas-1.jpg` … `-3.jpg` | Foto kegiatan belajar asli |
