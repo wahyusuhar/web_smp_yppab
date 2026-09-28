@@ -1,0 +1,132 @@
+---
+/**
+ * Kontak (PRD §5): alamat, telepon, WhatsApp, email, jam layanan, peta, media sosial. Halaman tenang: hanya A2.
+ * Baris placeholder disembunyikan di produksi (saringBaris). Bila SEMUA data kontak masih placeholder,
+ * produksi menampilkan satu kalimat pemberitahuan, bukan halaman kosong.
+ */
+import { icons } from "@lucide/astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import PetaLokasi from "../components/PetaLokasi.astro";
+import Button from "../components/Button.astro";
+import Isian from "../components/Isian.astro";
+import { sekolah } from "../data/sekolah";
+import { saringBaris, isIsi } from "../lib/isian";
+import { alamatLengkap } from "../lib/alamat";
+import { modePeta } from "../lib/peta";
+import { tautanWhatsApp } from "../lib/whatsapp";
+
+const { kontak } = sekolah;
+const wa = tautanWhatsApp();
+
+const baris = saringBaris([
+  { label: "Alamat", nilai: alamatLengkap(), ikon: "MapPin", href: undefined },
+  {
+    label: "Telepon",
+    nilai: kontak.telepon,
+    ikon: "Phone",
+    href: isIsi(kontak.telepon) ? undefined : `tel:${kontak.telepon.replace(/[^\d+]/g, "")}`,
+  },
+  { label: "WhatsApp", nilai: kontak.whatsapp, ikon: "MessageCircle", href: wa ?? undefined },
+  { label: "Email", nilai: kontak.email, ikon: "Mail", href: isIsi(kontak.email) ? undefined : `mailto:${kontak.email}` },
+  { label: "Jam layanan", nilai: sekolah.jamLayanan, ikon: "Clock", href: undefined },
+]);
+
+const NAMA_SOSMED: Record<keyof typeof sekolah.sosialMedia, string> = {
+  instagram: "Instagram",
+  facebook: "Facebook",
+  youtube: "YouTube",
+  tiktok: "TikTok",
+};
+const sosmed = Object.entries(sekolah.sosialMedia)
+  .filter((e): e is [keyof typeof NAMA_SOSMED, string] => e[1] !== null)
+  .map(([k, url]) => ({ label: NAMA_SOSMED[k], url }));
+
+const adaPeta = modePeta() !== "sembunyi";
+const kosongSemua = baris.length === 0 && !adaPeta && sosmed.length === 0;
+---
+
+<BaseLayout
+  judul="Kontak & Alamat – SMPS YPPAB"
+  deskripsi="Alamat, nomor telepon, WhatsApp, email, dan jam layanan SMPS YPPAB. Hubungi kami untuk bertanya tentang pendaftaran atau jadwalkan kunjungan ke sekolah."
+  breadcrumb={[{ label: "Kontak", href: "/kontak/" }]}
+  h1="Hubungi SMPS YPPAB"
+  pengantar="Orang tua dan calon siswa dapat bertanya langsung ke bagian tata usaha, lewat telepon, WhatsApp, atau datang ke sekolah pada jam layanan."
+>
+  {
+    kosongSemua ? (
+      <section class="section-y" aria-label="Informasi kontak">
+        <div class="container-situs flex flex-col gap-6">
+          <p class="teks-lebar rounded-kartu border border-biru-100 bg-biru-50 p-6 text-lg text-biru-800">
+            Informasi kontak SMPS YPPAB sedang diperbarui. Silakan kunjungi halaman ini kembali dalam waktu dekat.
+          </p>
+          <div>
+            <Button href="/pendaftaran/" varian="secondary">
+              Lihat info pendaftaran
+            </Button>
+          </div>
+        </div>
+      </section>
+    ) : (
+      <section class="section-y" aria-labelledby="judul-kontak">
+        <div class="container-situs grid gap-12 lg:grid-cols-2 lg:gap-16">
+          <div class="flex flex-col gap-8">
+            <SectionHeading id="judul-kontak" eyebrow="Kontak" judul="Cara menghubungi kami" />
+            {baris.length > 0 && (
+              <dl class="flex flex-col gap-5">
+                {baris.map((b) => {
+                  const Ikon = icons[b.ikon as keyof typeof icons];
+                  return (
+                    <div class="flex items-start gap-4">
+                      {Ikon && <Ikon size={24} stroke-width={1.75} class="mt-0.5 shrink-0 text-biru-600" />}
+                      <div>
+                        <dt class="text-sm font-semibold text-biru-800">{b.label}</dt>
+                        <dd>
+                          {b.href ? (
+                            <a href={b.href} class="text-biru-600 underline-offset-4 hover:underline" rel="noopener">
+                              {b.nilai}
+                            </a>
+                          ) : (
+                            <Isian nilai={b.nilai} />
+                          )}
+                        </dd>
+                      </div>
+                    </div>
+                  );
+                })}
+              </dl>
+            )}
+            {sosmed.length > 0 && (
+              <div>
+                <h2 class="text-h3">Media sosial</h2>
+                <ul class="mt-3 flex flex-wrap gap-4">
+                  {sosmed.map((s) => (
+                    <li>
+                      <a href={s.url} rel="noopener me" class="font-semibold text-biru-600 underline-offset-4 hover:underline">
+                        {s.label} SMPS YPPAB
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <div class="flex flex-wrap gap-3">
+              <Button href="/pendaftaran/">Info pendaftaran</Button>
+            </div>
+          </div>
+          {adaPeta && (
+            <div class="flex flex-col gap-4">
+              <h2 class="text-h3">Lokasi</h2>
+              <PetaLokasi />
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<script>
+  import { pasangAnimasiGulir } from "../scripts/animasi";
+  pasangAnimasiGulir();
+</script>
