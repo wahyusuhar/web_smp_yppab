@@ -12,9 +12,9 @@ export interface LatarHero {
 
 export const latarHalaman: Record<string, LatarHero> = {
   "/profil/": {
-    src: "stok/kegiatan-kelas-3",
-    alt: "Ilustrasi: siswa SMP berseragam batik menulis di buku catatan",
-    posisi: { lebar: "50% 40%", sempit: "60% 50%" },
+    src: "stok/gedung-1",
+    alt: "Ilustrasi: gedung sekolah dua lantai dengan halaman berpaving dan pepohonan",
+    posisi: { lebar: "50% 45%", sempit: "60% 50%" },
   },
   "/guru-dan-staf/": {
     src: "stok/galeri-9",

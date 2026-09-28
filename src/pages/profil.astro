@@ -14,7 +14,6 @@ import Isian from "../components/Isian.astro";
 import { sekolah } from "../data/sekolah";
 import { saringBaris, isIsi } from "../lib/isian";
 import { alamatLengkap } from "../lib/alamat";
-import { modeFoto } from "../lib/foto";
 
 const { kepalaSekolah, visi, misi, sambutan, sejarah } = sekolah;
 
@@ -30,7 +29,6 @@ const identitas = saringBaris([
   { label: "Alamat", nilai: alamatLengkap() },
   { label: "Provinsi", nilai: sekolah.alamat.provinsi },
 ]);
-const adaFotoGedung = modeFoto("stok/gedung-1") !== "sembunyi";
 const namaKepala = isIsi(kepalaSekolah.nama) ? null : kepalaSekolah.nama;
 ---
 
@@ -104,10 +102,11 @@ const namaKepala = isIsi(kepalaSekolah.nama) ? null : kepalaSekolah.nama;
     <div class="container-situs grid gap-12 lg:grid-cols-3 lg:gap-16">
       <div class="flex flex-col gap-6">
         <SectionHeading id="judul-sejarah" eyebrow="Perjalanan" judul="Sejarah singkat" />
-        <div class:list={["relative", adaFotoGedung ? "flex flex-col gap-4" : ""]}>
+        <!-- Foto gedung sudah menjadi hero halaman ini (heroHalaman.ts), jadi di sini foto kegiatan saja -->
+        <div class="flex flex-col gap-4">
           <Foto
-            src="stok/gedung-1"
-            alt="Foto gedung sekolah"
+            src="stok/kegiatan-kelas-3"
+            alt="Ilustrasi: siswa SMP berseragam batik menulis di buku catatan"
             rasio="4/3"
             sizes="(min-width: 1024px) 30vw, 100vw"
             class="rounded-gambar"
