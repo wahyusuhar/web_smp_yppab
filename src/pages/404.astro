@@ -1,0 +1,47 @@
+---
+/**
+ * 404 (PRD §5): pesan + tautan kembali, A2. noindex & tidak masuk sitemap (SEO §3).
+ * Host statis (Cloudflare Pages/Netlify/Vercel) menyajikan dist/404.html dengan status 404.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import Button from "../components/Button.astro";
+import { menuUtama } from "../data/navigasi";
+---
+
+<BaseLayout
+  judul="Halaman Tidak Ditemukan – SMPS YPPAB"
+  deskripsi="Halaman yang Anda cari tidak ditemukan di website SMPS YPPAB."
+  h1="Halaman tidak ditemukan"
+  pengantar="Alamat yang Anda buka mungkin salah ketik, atau halamannya sudah dipindahkan."
+  noindex
+>
+  <section class="section-y" aria-labelledby="judul-saran">
+    <div class="container-situs flex flex-col gap-8">
+      <SectionHeading id="judul-saran" eyebrow="Coba halaman ini" judul="Mungkin Anda mencari" />
+      <ul class="flex flex-wrap gap-3">
+        {
+          menuUtama.map((m) => (
+            <li>
+              <a
+                href={m.href}
+                class="inline-flex min-h-12 items-center rounded-full border border-biru-100 bg-biru-50 px-5 font-semibold text-biru-800 hover:bg-biru-100"
+              >
+                {m.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="flex flex-wrap gap-3">
+        <Button href="/">Kembali ke beranda</Button>
+        <Button href="/pendaftaran/" varian="secondary">Info pendaftaran</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { pasangAnimasiGulir } from "../scripts/animasi";
+  pasangAnimasiGulir();
+</script>
