@@ -12,6 +12,7 @@ import WhatsAppFab from "../components/WhatsAppFab.astro";
 import KembaliKeAtas from "../components/KembaliKeAtas.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import PageHero from "../components/PageHero.astro";
+import { latarHalaman, latarBawaan } from "../data/heroHalaman";
 import { buatSchema, buatSchemaBreadcrumb, type ItemBreadcrumb } from "../lib/schema";
 import { periksaMeta } from "../lib/seo";
 
@@ -49,6 +50,10 @@ const {
 const site = Astro.site!;
 const canonical = new URL(Astro.url.pathname, site).href;
 const urlGambarOg = new URL(gambarOg, site).href;
+
+// Foto latar hero halaman dalam dicari berdasarkan path (src/data/heroHalaman.ts)
+const pathHalaman = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const latarHero = latarHalaman[pathHalaman] ?? latarBawaan;
 
 const jejak: ItemBreadcrumb[] | undefined = breadcrumb && [{ label: "Beranda", href: "/" }, ...breadcrumb];
 const semuaSchema = [buatSchema(site), ...(jejak ? [buatSchemaBreadcrumb(jejak, site)] : []), ...schema];
@@ -113,7 +118,7 @@ if (!noindex) periksaMeta(Astro.url.pathname, judul, deskripsi);
     <main id="konten" tabindex="-1" class="focus:outline-none">
       {
         h1 ? (
-          <PageHero judul={h1} pengantar={pengantar} breadcrumb={jejak}>
+          <PageHero judul={h1} pengantar={pengantar} breadcrumb={jejak} latar={latarHero}>
             <slot name="hero-tambahan" />
           </PageHero>
         ) : (

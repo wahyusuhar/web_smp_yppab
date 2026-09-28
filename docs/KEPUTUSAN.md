@@ -125,3 +125,11 @@ ditandai dengan rujukannya, supaya dokumen utama tetap jadi sumber kebenaran.
 | 71 | Galeri | Masonry dengan CSS columns; lightbox memakai versi webp 1600px; item placeholder dilewati di produksi. Kalimat "akan segera kami perbarui" tampil selama `adaFotoStok("galeri")`. |
 | 72 | Label logo (WCAG 2.5.3) | Tautan logo tidak lagi memakai `aria-label`; nama aksesibel = teks logo + " – Beranda" (sr-only), ditemukan lewat audit Lighthouse `label-content-name-mismatch`. |
 | 73 | Uji Fase 5 | 9 halaman × (luapan 360/768/1280, satu h1, tanpa "–" kosong, tanpa JS, Tab sampai footer dengan fokus terlihat): 72/72 lulus. Regresi beranda 25/25, keyboard 26/26, tombol hero 6/6. |
+
+## Revisi setelah review Fase 5 — 2026-09-28
+
+| # | Topik | Keputusan |
+|---|---|---|
+| 74 | Emblem Tut Wuri Handayani | Atas permintaan, emblem Tut Wuri Handayani tampil di samping wordmark di header, drawer, dan footer. File resmi dari Wikimedia Commons (domain publik, Pasal 43 UU 28/2014), dirender ke PNG 256px tanpa mengubah warna/bentuk. Commons menandainya *insignia*: pemakaian lambang resmi bisa diatur terpisah dari hak cipta — **sebaiknya dikonfirmasi ke sekolah**. Emblem bukan logo sekolah; `logo` JSON-LD tetap kosong. Header: alt kosong (nama tautan = teks logo); footer: alt "Logo Tut Wuri Handayani". 32px di bawah `sm` (tanpa luapan di 320px), `fetchpriority="low"` (tanpa itu LCP beranda naik ke 2,5 dtk; setelahnya 2,1–2,3 dtk). |
+| 75 | Hero halaman dalam berfoto (merevisi #64) | Atas permintaan, `PageHero` kini memakai foto latar statis per halaman (`src/data/heroHalaman.ts`, dicari BaseLayout dari path; foto bawaan untuk 404 & kredit foto), dipilih agar tidak tampil ganda di halaman yang sama. Overlay khusus `.hero-halaman-overlay` (≥ 0.78 di area teks) karena teks melebar ±65%: kontras teks putih diukur per baris teks di 9 halaman × 2 lebar = 10,6:1–14,2:1. Breadcrumb punya varian `diLatarGelap`. Slideshow tetap hanya di beranda. |
+| 76 | Halaman berita belum ada | Menu "Berita" sudah ada sejak Fase 3, tetapi halaman daftar & detail berita dibuat di Fase 6 (content collection) — sampai itu tautannya menuju 404. |

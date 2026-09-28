@@ -232,6 +232,34 @@
       }
     }
   }
+  /* Overlay hero halaman dalam: lebih pekat dari beranda karena teks (judul + pengantar) melebar hingga ±65% lebar
+     dan foto latar dipilih dari stok yang terang. Minimal 0.78 di area teks (kontras AA ≥ 4.5:1 pada piksel putih). */
+  .hero-halaman-overlay {
+    background: linear-gradient(to right, rgb(7 26 51 / 0.9), rgb(7 26 51 / 0.8));
+    @media (width >= 48rem) {
+      background: linear-gradient(
+        to right,
+        rgb(7 26 51 / 0.93) 0%,
+        rgb(7 26 51 / 0.85) 50%,
+        rgb(7 26 51 / 0.78) 68%,
+        rgb(7 26 51 / 0.35) 90%,
+        rgb(7 26 51 / 0.2) 100%
+      );
+    }
+  }
+
+  /* Foto latar hero halaman dalam (PageHero): memenuhi section, object-position per foto (data/heroHalaman.ts) */
+  .hero-halaman-foto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--pos-sempit);
+    @media (min-aspect-ratio: 1/1) {
+      object-position: var(--pos-lebar);
+    }
+  }
+
   /* Ken Burns: skala 1.08 → 1 sepanjang foto tampil (6 dtk + 1,2 dtk crossfade). Hanya bila boleh animasi. */
   .js-anim .hero-slide img {
     transform: scale(1.08);

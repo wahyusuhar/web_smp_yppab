@@ -59,6 +59,9 @@ tidak terlipat — dipakai bila dua tombol harus sejajar di layar 360px (hero be
 - **Garis "dasi"**: garis diagonal tipis biru-400 sebagai dekorasi section (terinspirasi dasi seragam SMP). Dipakai konsisten, bukan acak.
 - **Gelombang SVG** pemisah section hero → konten, beranimasi pelan: pola gelombang berulang (tileable) digeser `translateX`, 8–12 dtk loop. Bukan path morph; plugin MorphSVG tidak dipakai.
 - Foto dengan bingkai radius + offset blok biru-100 di belakangnya.
+- **Hero halaman dalam** (`PageHero`): foto latar statis per halaman (`src/data/heroHalaman.ts`) + overlay `biru-950`
+  (≥ 0.78 di area teks; satu-satunya gradien di halaman) + breadcrumb + h1 putih + garis "dasi". Tanpa slideshow —
+  slideshow tetap khusus beranda. Foto = elemen LCP (eager, fetchpriority high); label "Foto ilustrasi" otomatis.
 - Angka besar (statistik, nomor langkah) memakai weight 800 dengan outline/transparansi biru.
 - **Label "Foto ilustrasi"**: setiap foto stok yang tampil (hero, galeri, kegiatan, ekskul, fasilitas, berita) diberi label
   kecil di pojok kiri bawah — pill, `text-xs` weight 600, teks `putih` di atas `biru-950` 75% opacity, jarak 12px dari tepi.
@@ -117,4 +120,7 @@ Aturan wajib animasi:
 ## 7. Ikon & ilustrasi
 - Lucide SVG, stroke 1.75, ukuran 20/24px, warna mengikuti teks.
 - Logo: jika logo resmi sekolah belum ada, pakai wordmark teks "SMPS YPPAB" di `src/components/Logo.astro` + TODO. JANGAN menggambar logo/lambang karangan yang bisa dikira resmi. Wordmark tidak dipakai sebagai `logo` di JSON-LD.
+- Emblem Tut Wuri Handayani (logo resmi Kemendikbud/Kemendikdasmen, file resmi dari Wikimedia Commons, domain publik)
+  tampil di samping wordmark di header, drawer, dan footer — 32px di bawah `sm`, 40px ke atas, `fetchpriority="low"`.
+  Emblem ini BUKAN logo sekolah; tetap tidak dipakai sebagai `logo` JSON-LD. Tidak boleh diubah warna/bentuknya.
 - Paket ikon: paket Astro resmi Lucide bila tersedia di npm, jika tidak `lucide-static`. Pilihan akhir dicatat di `docs/KEPUTUSAN.md`.

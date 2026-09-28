@@ -1,38 +1,80 @@
 ---
 /**
- * Hero halaman dalam: breadcrumb + h1 (+ pengantar) di latar biru-50 dengan garis "dasi" (DESIGN.md §5).
- * Sengaja tanpa foto/slideshow supaya hero beranda tetap istimewa. Dirender oleh BaseLayout lewat prop `h1`.
+ * Hero halaman dalam: foto latar + overlay biru-950 (satu-satunya gradien di halaman) + breadcrumb + h1 putih
+ * + garis "dasi". Foto adalah elemen LCP: eager + fetchpriority high. Hero beranda tetap satu-satunya slideshow.
+ * Label "Foto ilustrasi" otomatis dari kredit.ts (DESIGN.md §5). Dirender oleh BaseLayout lewat prop `h1`.
  */
+import { getImage } from "astro:assets";
 import Breadcrumb from "./Breadcrumb.astro";
 import type { ItemBreadcrumb } from "../lib/schema";
+import type { LatarHero } from "../data/heroHalaman";
+import { cariFoto } from "../lib/foto";
 
 interface Props {
   judul: string;
   pengantar?: string;
   breadcrumb?: ItemBreadcrumb[];
+  latar: LatarHero;
 }
 
-const { judul, pengantar, breadcrumb } = Astro.props;
+const { judul, pengantar, breadcrumb, latar } = Astro.props;
+
+const foto = cariFoto(latar.src);
+if (foto.jenis !== "gambar") throw new Error(`[PageHero] ${latar.src} harus berupa foto, bukan placeholder`);
+const widths = [640, 960, 1280, 1600, 1920].filter((w) => w <= foto.gambar.width);
+const [avif, webp, jpg] = await Promise.all(
+  (["avif", "webp", "jpg"] as const).map((format) => getImage({ src: foto.gambar, widths, format })),
+);
+const posisi = latar.posisi ?? { lebar: "50% 50%", sempit: "50% 50%" };
 ---
 
-<section class="relative isolate overflow-hidden bg-biru-50" aria-labelledby="judul-halaman">
-  <!-- Garis "dasi": tiga garis diagonal tipis biru-400 -->
-  <svg
-    class="absolute inset-y-0 right-0 -z-10 h-full w-1/2 text-biru-400 opacity-50 md:w-1/3"
-    viewBox="0 0 300 300"
-    preserveAspectRatio="none"
-    aria-hidden="true"
-  >
-    <line x1="60" y1="0" x2="300" y2="240" stroke="currentColor" stroke-width="1.5"></line>
-    <line x1="140" y1="0" x2="300" y2="160" stroke="currentColor" stroke-width="1.5"></line>
-    <line x1="220" y1="0" x2="300" y2="80" stroke="currentColor" stroke-width="1.5"></line>
-  </svg>
-  <div class="container-situs flex flex-col gap-6 pt-6 pb-12 lg:pb-16">
-    {breadcrumb && <Breadcrumb item={breadcrumb} />}
-    <div class="flex max-w-3xl flex-col gap-4">
-      <h1 id="judul-halaman" class="text-h2 font-extrabold">{judul}</h1>
-      {pengantar && <p class="teks-lebar">{pengantar}</p>}
+<section class="latar-gelap relative isolate overflow-hidden bg-biru-950" aria-labelledby="judul-halaman">
+  <div class="absolute inset-0 -z-10">
+    <picture class="hero-halaman-foto" style={`--pos-lebar: ${posisi.lebar}; --pos-sempit: ${posisi.sempit}`}>
+      <source type="image/avif" srcset={avif.srcSet.attribute} sizes="100vw" />
+      <source type="image/webp" srcset={webp.srcSet.attribute} sizes="100vw" />
+      <img
+        src={jpg.src}
+        srcset={jpg.srcSet.attribute}
+        sizes="100vw"
+        alt={latar.alt}
+        width={foto.gambar.width}
+        height={foto.gambar.height}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </picture>
+    <div class="hero-halaman-overlay absolute inset-0" aria-hidden="true"></div>
+    <!-- Garis "dasi": tiga garis diagonal tipis biru-400 -->
+    <svg
+      class="absolute inset-y-0 right-0 h-full w-1/2 text-biru-400 opacity-50 md:w-1/3"
+      viewBox="0 0 300 300"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <line x1="60" y1="0" x2="300" y2="240" stroke="currentColor" stroke-width="1.5"></line>
+      <line x1="140" y1="0" x2="300" y2="160" stroke="currentColor" stroke-width="1.5"></line>
+      <line x1="220" y1="0" x2="300" y2="80" stroke="currentColor" stroke-width="1.5"></line>
+    </svg>
+  </div>
+
+  <div class="container-situs flex min-h-80 flex-col gap-6 pt-6 pb-16 lg:min-h-96 lg:pb-20">
+    {breadcrumb && <Breadcrumb item={breadcrumb} diLatarGelap />}
+    <div class="mt-auto flex max-w-3xl flex-col gap-4 text-putih">
+      <h1 id="judul-halaman" class="text-h2 font-extrabold text-putih">{judul}</h1>
+      {pengantar && <p class="teks-lebar text-biru-50">{pengantar}</p>}
       <slot />
     </div>
   </div>
+
+  {
+    foto.stok && (
+      <span
+        class="pointer-events-none absolute bottom-4 left-5 rounded-full bg-biru-950/75 px-3 py-1 text-xs font-semibold text-putih md:left-8"
+        aria-hidden="true"
+      >
+        Foto ilustrasi
+      </span>
+    )
+  }
 </section>

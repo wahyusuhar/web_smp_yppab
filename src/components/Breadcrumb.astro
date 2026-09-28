@@ -5,25 +5,33 @@ import type { ItemBreadcrumb } from "../lib/schema";
 
 interface Props {
   item: ItemBreadcrumb[];
+  /** Di atas foto/latar gelap (hero halaman dalam) */
+  diLatarGelap?: boolean;
 }
 
-const { item } = Astro.props;
+const { item, diLatarGelap = false } = Astro.props;
 ---
 
 <nav aria-label="Breadcrumb" class="text-sm">
-  <ol class="flex flex-wrap items-center gap-1 text-abu-700">
+  <ol class:list={["flex flex-wrap items-center gap-1", diLatarGelap ? "text-biru-100" : "text-abu-700"]}>
     {
       item.map((b, i) => {
         const terakhir = i === item.length - 1;
         return (
           <li class="flex items-center gap-1">
             {terakhir ? (
-              <span aria-current="page" class="font-semibold text-biru-800">
+              <span aria-current="page" class:list={["font-semibold", diLatarGelap ? "text-putih" : "text-biru-800"]}>
                 {b.label}
               </span>
             ) : (
               <>
-                <a href={b.href} class="underline-offset-4 hover:text-biru-600 hover:underline">
+                <a
+                  href={b.href}
+                  class:list={[
+                    "underline-offset-4 hover:underline",
+                    diLatarGelap ? "hover:text-putih" : "hover:text-biru-600",
+                  ]}
+                >
                   {b.label}
                 </a>
                 <ChevronRight size={16} stroke-width={1.75} />
