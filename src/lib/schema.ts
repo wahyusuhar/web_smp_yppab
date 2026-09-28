@@ -56,6 +56,23 @@ export function buatSchema(site: URL): Json {
   return bersihkan(schema) ?? {};
 }
 
+/**
+ * Schema `FAQPage` (SEO §4). Mengembalikan `null` untuk FAQ dummy: jawaban karangan tidak boleh masuk
+ * structured data — sama seperti NewsArticle untuk berita dummy.
+ */
+export function buatSchemaFaq(faq: { daftar: { tanya: string; jawab: string }[]; dummy: boolean }): Json | null {
+  if (faq.dummy || faq.daftar.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.daftar.map((f) => ({
+      "@type": "Question",
+      name: f.tanya,
+      acceptedAnswer: { "@type": "Answer", text: f.jawab },
+    })),
+  };
+}
+
 export interface ItemBreadcrumb {
   label: string;
   href: string;

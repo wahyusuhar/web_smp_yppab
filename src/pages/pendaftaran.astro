@@ -1,0 +1,187 @@
+---
+/**
+ * Penerimaan Murid Baru (SPMB) — PRD §5: status, jadwal, biaya, syarat, alur (A7), FAQ, tombol WhatsApp.
+ * - dibuka=false → badge "Informasi pendaftaran segera diumumkan"; dibuka=true → badge kuning "Pendaftaran Dibuka".
+ * - Jadwal & biaya yang masih placeholder disembunyikan di produksi (saringBaris); section ikut hilang bila kosong.
+ * - FAQPage JSON-LD hanya bila FAQ bukan dummy (buatSchemaFaq).
+ */
+import { ListChecks, ChevronDown, CalendarDays, Wallet, MessageCircle } from "@lucide/astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import StepList from "../components/StepList.astro";
+import Badge from "../components/Badge.astro";
+import Button from "../components/Button.astro";
+import Isian from "../components/Isian.astro";
+import { sekolah } from "../data/sekolah";
+import { saringBaris } from "../lib/isian";
+import { buatSchemaFaq } from "../lib/schema";
+import { tautanWhatsApp } from "../lib/whatsapp";
+
+const { pendaftaran } = sekolah;
+const jadwal = saringBaris([
+  { label: "Tahun ajaran", nilai: pendaftaran.tahunAjaran },
+  ...pendaftaran.gelombang.map((g) => ({ label: g.nama, nilai: g.periode })),
+]);
+const biaya = saringBaris([{ label: "Biaya pendaftaran & SPP", nilai: pendaftaran.biaya }]);
+const schemaFaq = buatSchemaFaq(pendaftaran.faq);
+const wa = tautanWhatsApp();
+// Latar section berselang-seling mengikuti section yang benar-benar dirender (hero halaman = biru-50)
+const adaJadwal = jadwal.length > 0 || biaya.length > 0;
+const latar = (i: number) => ((adaJadwal ? i + 1 : i) % 2 === 0 ? "bg-biru-50" : "");
+---
+
+<BaseLayout
+  judul="Pendaftaran Murid Baru (SPMB) – SMPS YPPAB"
+  deskripsi="Informasi Penerimaan Murid Baru (SPMB) SMPS YPPAB: jadwal, syarat berkas, alur pendaftaran, biaya, dan jawaban atas pertanyaan yang sering diajukan orang tua."
+  breadcrumb={[{ label: "Pendaftaran", href: "/pendaftaran/" }]}
+  h1="Pendaftaran Murid Baru SMPS YPPAB"
+  pengantar="Penerimaan Murid Baru (SPMB) untuk lulusan SD/MI yang akan masuk kelas 7. Berikut jadwal, syarat, dan langkah pendaftarannya."
+  schema={schemaFaq ? [schemaFaq] : []}
+>
+  <Fragment slot="hero-tambahan">
+    {
+      pendaftaran.dibuka ? (
+        <Badge varian="kuning" class="self-start">
+          Pendaftaran Dibuka
+        </Badge>
+      ) : (
+        <Badge class="self-start">Informasi pendaftaran segera diumumkan</Badge>
+      )
+    }
+  </Fragment>
+
+  <!-- Jadwal & biaya: hanya baris yang sudah terisi (produksi) -->
+  {
+    adaJadwal && (
+      <section class="section-y" aria-labelledby="judul-jadwal">
+        <div class="container-situs flex flex-col gap-10">
+          <SectionHeading id="judul-jadwal" eyebrow="Waktu & biaya" judul="Jadwal dan biaya" />
+          <div class="grid gap-6 md:grid-cols-2">
+            {jadwal.length > 0 && (
+              <div class="rounded-kartu border border-abu-300 p-6">
+                <h3 class="flex items-center gap-2 text-h3">
+                  <CalendarDays size={24} stroke-width={1.75} class="text-biru-600" />
+                  Jadwal
+                </h3>
+                <dl class="mt-4 flex flex-col gap-3">
+                  {jadwal.map((b) => (
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <dt class="font-semibold text-biru-800 sm:w-40">{b.label}</dt>
+                      <dd>
+                        <Isian nilai={b.nilai} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
+            {biaya.length > 0 && (
+              <div class="rounded-kartu border border-abu-300 p-6">
+                <h3 class="flex items-center gap-2 text-h3">
+                  <Wallet size={24} stroke-width={1.75} class="text-biru-600" />
+                  Biaya
+                </h3>
+                <dl class="mt-4 flex flex-col gap-3">
+                  {biaya.map((b) => (
+                    <div>
+                      <dt class="font-semibold text-biru-800">{b.label}</dt>
+                      <dd>
+                        <Isian nilai={b.nilai} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Syarat berkas -->
+  <section class:list={["section-y", latar(1)]} aria-labelledby="judul-syarat">
+    <div class="container-situs grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div class="flex flex-col gap-4">
+        <SectionHeading id="judul-syarat" eyebrow="Persiapan" judul="Syarat berkas" deskripsi="Siapkan berkas berikut sebelum datang ke sekolah." />
+        {pendaftaran.syarat.dummy && <Badge varian="contoh" class="self-start" />}
+      </div>
+      <ul class="flex flex-col gap-3">
+        {
+          pendaftaran.syarat.daftar.map((s) => (
+            <li class="flex items-start gap-3 rounded-kartu border border-biru-100 bg-putih p-4">
+              <ListChecks size={24} stroke-width={1.75} class="mt-0.5 shrink-0 text-biru-600" />
+              <span>{s}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Alur (A7) -->
+  <section class:list={["section-y", latar(2)]} aria-labelledby="judul-alur">
+    <div class="container-situs grid gap-10 lg:grid-cols-3 lg:gap-16">
+      <div class="flex flex-col gap-4">
+        <SectionHeading id="judul-alur" eyebrow="Langkah demi langkah" judul="Alur pendaftaran" />
+        {pendaftaran.alur.dummy && <Badge varian="contoh" class="self-start" />}
+      </div>
+      <div class="lg:col-span-2">
+        <StepList item={pendaftaran.alur.langkah} />
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class:list={["section-y", latar(3)]} aria-labelledby="judul-faq">
+    <div class="container-situs grid gap-10 lg:grid-cols-3 lg:gap-16">
+      <div class="flex flex-col gap-4">
+        <SectionHeading id="judul-faq" eyebrow="Tanya jawab" judul="Pertanyaan yang sering diajukan" />
+        {pendaftaran.faq.dummy && <Badge varian="contoh" class="self-start" />}
+      </div>
+      <div class="flex flex-col gap-3 lg:col-span-2">
+        {
+          pendaftaran.faq.daftar.map((f) => (
+            <details class="faq-item rounded-kartu border border-abu-300 bg-putih">
+              <summary class="flex items-center justify-between gap-4 rounded-kartu p-5 font-semibold text-biru-800">
+                {f.tanya}
+                <ChevronDown size={20} stroke-width={1.75} class="ikon-faq shrink-0 text-biru-600" />
+              </summary>
+              <p class="teks-lebar px-5 pb-5">{f.jawab}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class:list={["section-y", latar(4)]} aria-labelledby="judul-tanya">
+    <div class="container-situs flex flex-col gap-6">
+      <SectionHeading
+        id="judul-tanya"
+        eyebrow="Masih ada pertanyaan?"
+        judul="Tanyakan langsung ke sekolah"
+        deskripsi="Tim tata usaha siap membantu pada jam layanan."
+      />
+      <div class="flex flex-wrap gap-3">
+        {
+          wa ? (
+            <Button href={wa} panah={false} rel="noopener">
+              <MessageCircle size={20} stroke-width={1.75} />
+              Tanya via WhatsApp
+            </Button>
+          ) : (
+            <Button href="/kontak/">Hubungi sekolah</Button>
+          )
+        }
+        <Button href="/profil/" varian="secondary">Kenali sekolah</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { pasangAnimasiGulir } from "../scripts/animasi";
+  pasangAnimasiGulir();
+</script>

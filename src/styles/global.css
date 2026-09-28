@@ -376,6 +376,23 @@
     }
   }
 
+  /* FAQ akordeon (<details>): sembunyikan penanda bawaan, ikon chevron berputar (transform) */
+  .faq-item {
+    summary {
+      list-style: none;
+      cursor: pointer;
+      &::-webkit-details-marker {
+        display: none;
+      }
+    }
+    .ikon-faq {
+      transition: transform 250ms ease-out;
+    }
+    &[open] .ikon-faq {
+      transform: rotate(180deg);
+    }
+  }
+
   /* A12 lightbox: layar penuh, latar gelap memudar */
   .lightbox {
     width: 100%;
