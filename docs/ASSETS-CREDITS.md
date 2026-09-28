@@ -48,3 +48,9 @@ Judul karya (wajib untuk atribusi Creative Commons, sama dengan field `judul` di
 - `galeri-7.jpg`: "Siswa siswi yang sedang menonton clasmeet"
 
 Slot tanpa foto (placeholder SVG): lihat `docs/ASSETS-TODO.md`.
+
+## Logo
+
+| Pemakaian | File | Sumber | Pembuat | Status | Tanggal unduh | Perubahan |
+|---|---|---|---|---|---|---|
+| Emblem Tut Wuri Handayani (header, drawer, footer) | `src/assets/images/logo/tut-wuri-handayani.png` | https://commons.wikimedia.org/wiki/File:Logo_of_Ministry_of_Education_and_Culture_of_Republic_of_Indonesia.svg | Kementerian Pendidikan dan Kebudayaan RI (SK No. 0398/M/1977) | Domain publik di Indonesia (Pasal 43 UU 28/2014); ditandai *insignia* oleh Commons — penggunaan lambang resmi bisa diatur terpisah dari hak cipta | 2026-09-28 | SVG dirender ke PNG 256×256 (warna & bentuk tidak diubah) |

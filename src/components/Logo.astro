@@ -1,28 +1,46 @@
 ---
 /**
- * Wordmark teks "SMPS YPPAB".
- * TODO: ganti dengan logo resmi sekolah bila sudah ada. JANGAN menggambar lambang karangan (DESIGN.md §7).
+ * Logo situs: emblem Tut Wuri Handayani (logo resmi Kemendikbud/Kemendikdasmen, domain publik — Pasal 43 UU 28/2014,
+ * sumber Wikimedia Commons, lihat docs/ASSETS-CREDITS.md) + wordmark teks "SMPS YPPAB".
+ * Emblem ini BUKAN logo sekolah: logo resmi SMPS YPPAB/yayasan belum ada (DESIGN.md §7) — tetap tidak dipakai
+ * sebagai `logo` di JSON-LD. Ganti/tambahkan logo sekolah bila sudah tersedia.
  */
+import { Image } from "astro:assets";
+import emblem from "../assets/images/logo/tut-wuri-handayani.png";
 import { sekolah } from "../data/sekolah";
 
 interface Props {
   /** "terang" untuk latar putih, "gelap" untuk latar biru-950 (footer) */
   varian?: "terang" | "gelap";
+  /** Alt emblem. Kosong (dekoratif) bila logo berada di dalam tautan yang namanya sudah jelas dari teks. */
+  altEmblem?: string;
+  /** Muat emblem segera (header) atau lazy (footer). Selalu fetchpriority low: jangan bersaing dengan foto LCP hero. */
+  segera?: boolean;
   class?: string;
 }
 
-const { varian = "terang", class: kelas } = Astro.props;
+const { varian = "terang", altEmblem = "", segera = false, class: kelas } = Astro.props;
+const [kata1, ...sisa] = sekolah.nama.split(" ");
 ---
 
-<span
-  class:list={[
-    "inline-flex items-baseline gap-1 text-xl leading-none font-extrabold tracking-tight",
-    varian === "terang" ? "text-biru-800" : "text-putih",
-    kelas,
-  ]}
->
-  <span>{sekolah.nama.split(" ")[0]}</span>{" "}
-  <span class:list={[varian === "terang" ? "text-biru-600" : "text-biru-400"]}>
-    {sekolah.nama.split(" ").slice(1).join(" ")}
+<span class:list={["inline-flex items-center gap-2 sm:gap-3", kelas]}>
+  <Image
+    src={emblem}
+    alt={altEmblem}
+    width={40}
+    height={40}
+    densities={[1, 2]}
+    loading={segera ? "eager" : "lazy"}
+    fetchpriority="low"
+    class="size-8 shrink-0 sm:size-10"
+  />
+  <span
+    class:list={[
+      "inline-flex items-baseline gap-1 text-xl leading-none font-extrabold tracking-tight",
+      varian === "terang" ? "text-biru-800" : "text-putih",
+    ]}
+  >
+    <span>{kata1}</span>{" "}
+    <span class:list={[varian === "terang" ? "text-biru-600" : "text-biru-400"]}>{sisa.join(" ")}</span>
   </span>
 </span>
