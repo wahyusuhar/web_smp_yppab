@@ -21,7 +21,7 @@ const { varian = "terang", class: kelas } = Astro.props;
     kelas,
   ]}
 >
-  <span>{sekolah.nama.split(" ")[0]}</span>
+  <span>{sekolah.nama.split(" ")[0]}</span>{" "}
   <span class:list={[varian === "terang" ? "text-biru-600" : "text-biru-400"]}>
     {sekolah.nama.split(" ").slice(1).join(" ")}
   </span>

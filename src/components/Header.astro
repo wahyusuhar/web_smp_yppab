@@ -14,8 +14,10 @@ const pathname = Astro.url.pathname;
 
 <header class="header-situs" data-header>
   <div class="container-situs flex h-20 items-center justify-between gap-6" data-header-isi>
-    <a href="/" class="rounded-sm" aria-label="SMPS YPPAB – Beranda" data-header-logo>
+    <!-- Nama aksesibel = teks logo yang terlihat + keterangan tujuan (WCAG 2.5.3 label in name) -->
+    <a href="/" class="rounded-sm" data-header-logo>
       <Logo />
+      <span class="sr-only"> – Beranda</span>
     </a>
 
     <nav aria-label="Menu utama" class="hidden xl:block">
